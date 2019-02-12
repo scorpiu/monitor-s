@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ideal.order.mapper.OrderMapper">
+
+	<sql id="offer_Column_List" >
+    	OFFER_ID,
+		COMMODITY_TYPE,
+		OFFER_TYPE,
+		OFFER_NAME,
+		OFFER_NBR,
+		OFFER_DESC,
+		EFF_DATE,
+		EXP_DATE,
+		PRICING,
+		REMARK,
+		MANAGE_REGION_ID,
+		STATUS_CD,
+		CREATE_STAFF,
+		UPDATE_STAFF,
+		CREATE_DATE,
+		STATUS_DATE,
+		UPDATE_DATE
+  	</sql>
+	<sql id="offer_inst_Column_List" >
+    	OFFER_INST_ID,
+		CUST_ID,
+		OFFER_INST_TYPE,
+		OFFER_INST_NAME,
+		CUST_ORDER_ID,
+		CUST_ORDER_NBR,
+		EFF_DATE,
+		EXP_DATE,
+		REMARK,
+		STATUS_CD,
+		CREATE_STAFF,
+		UPDATE_STAFF,
+		CREATE_DATE,
+		STATUS_DATE,
+		UPDATE_DATE,
+		UPDATE_DATE,
+  	</sql>
+
+	<!--  购物车所有商品-->
+	<select id="getAllCart" resultType="com.ideal.order.dto.OrderCartDto">
+  		select o.offer_id,o.offer_name,o.offer_desc,o.pricing,oaa.default_value,o.offer_type PROD_TYPE
+		from cart c left join offer o
+		on c.OFFER_ID = o.offer_id
+		left join (select oa.offer_id,oa.default_value from offer_attr oa left join dictionary d on oa.attr_id=d.dictionary_id where d.DICTIONARY_ID=1001) oaa
+		on o.offer_id=oaa.offer_id where c.user_name = #{USER_NAME}
+  	</select>
+	<!--  组合商品-->
+	<select id="getGroupOffer" resultType="com.ideal.order.dto.OrderCartDto">
+  		select o.offer_id,o.offer_name,o.offer_desc,o.pricing,oaa.default_value,o.offer_type PROD_TYPE
+		from offer o left join offer_rel orr on o.offer_id = orr.offer_id
+		left join (select oa.offer_id,oa.default_value from offer_attr oa left join dictionary d on oa.attr_id=d.dictionary_id where d.DICTIONARY_ID=1001) oaa
+		on o.offer_id=oaa.offer_id where orr.par_offer_id= #{OFFER_ID}
+  	</select>
+	<!--  加装包-->
+	<select id="getAllAdded" resultType="com.ideal.order.dto.OrderAddedDto">
+  		select p.prod_id,p.prod_name,p.prod_desc,oaa.default_value,p.FACTORY_PRICING
+		from offer_prod_rel opr left join  product p on opr.prod_id=p.prod_id left join prod_rel pr on p.prod_id = pr.prod_id
+		left join (select pa.prod_id,pa.default_value from prod_attr pa left join dictionary d on pa.attr_id=d.dictionary_id where d.DICTIONARY_ID=1001) oaa
+		on p.prod_id=oaa.prod_id where p.prod_type="A" and opr.offer_id=#{OFFER_ID};
+  	</select>
+
+	<!--  产品-->
+	<select id="getAllProd" resultType="com.ideal.order.dto.OrderProdDto">
+		select p.prod_id,p.prod_name,p.prod_desc,oaa.default_value,p.FACTORY_PRICING
+		from offer_prod_rel opr left join  product p on opr.prod_id=p.prod_id
+		left join (select pa.prod_id,pa.default_value from prod_attr pa left join dictionary d on pa.attr_id=d.dictionary_id where d.DICTIONARY_ID=1001) oaa
+		on p.prod_id=oaa.prod_id
+		<where>
+			opr.offer_id=#{OFFER_ID}
+			<if test="zu!=null">
+				and  p.prod_type="M"
+			</if>
+		</where>
+	</select>
+  	<!--  添加订单 order-->
+  	<insert id="addSubmintOrder">
+  		insert into orders
+  		set serial = #{SERIAL},
+  		user_name = #{USER_NAME},
+  		price = #{PRICING},
+  		order_date = #{ORDER_DATE},
+  		status = #{STATUS},
+  		order_content = #{ORDER_CONTENT}
+  	</insert>
+  	<!--  添加订单 offer_inst-->
+  	<select id="queryOffer" resultType="com.ideal.entity.OfferEntity">
+  		select o.* from offer_rel orr left join offer o on  orr.offer_id = o.offer_id
+  		where orr.par_offer_id=#{OFFER_ID}
+  	</select>
+  	<insert id="addOfferOrder" >
+  		<selectKey resultType="java.lang.String" order="AFTER" keyProperty="OFFER_INST_ID">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  		insert into offer_inst
+  		set
+  		CUST_ID = #{USER_NAME},
+  		OFFER_ID = #{OFFER_ID},
+   		OFFER_INST_TYPE = (select offer_type from offer where offer_id = #{OFFER_ID}),
+		OFFER_INST_NAME = (select offer_name from offer where offer_id = #{OFFER_ID}),
+		CUST_ORDER_NBR = #{SERIAL},
+		EFF_DATE = #{EFF_DATE},
+		EXP_DATE = #{EXP_DATE},
+		STATUS_CD = 0
+  	</insert>
+  	<!--  添加订单 offer_attr_inst-->
+  	<select id="queryOfferAttr" resultType="com.ideal.entity.OfferAttrEntity">
+  		select * from offer_attr where offer_id = #{OFFER_ID};
+  	</select>
+  	<insert id="addOfferAttr">
+  		insert into offer_inst_attr
+  		set
+  		CUST_ID = #{USER_NAME},
+  		OFFER_INST_ID = #{OFFER_INST_ID},
+  		OFFER_ID = #{OFFER_ID},
+  		ATTR_ID = #{ATTR_ID},
+  		ATTR_VAL = #{ATTR_VALUE},
+		CUST_ORDER_NBR = #{SERIAL},
+		EFF_DATE = #{EFF_DATE},
+		EXP_DATE = #{EXP_DATE},
+		STATUS_CD = 0
+  	</insert>
+  	<!--  添加订单offer_rel_inst-->
+  	<select id="queryOfferRel" resultType="com.ideal.entity.OfferRelEntity">
+  		select * from offer_rel where par_offer_id = #{OFFER_ID};
+  	</select>
+  	<insert id="addOfferRel" parameterType="com.ideal.entity.OfferInstRelEntity">
+  		insert into offer_inst_rel
+  		set
+  		CUST_ID = #{CUST_ID},
+  		OFFER_ID = #{OFFER_ID},
+  		PAR_OFFER_ID = #{PAR_OFFER_ID},
+  		OFFER_INST_ID = #{OFFER_INST_ID},
+		PAR_OFFER_INST_ID = #{PAR_OFFER_INST_ID},
+		EFF_DATE = #{EFF_DATE},
+		EXP_DATE = #{EXP_DATE},
+		STATUS_CD = #{STATUS_CD}
+  	</insert>
+
+  	<!-- prod_inst -->
+  	<insert id="addProdInstOrder">
+		<selectKey resultType="java.lang.String" order="AFTER" keyProperty="PROD_INST_ID">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  		insert into prod_inst
+  		set
+  		CUST_ID = #{USER_NAME},
+  		PROD_ID = #{PROD_ID},
+		PROD_INST_NAME = (select prod_name from product where PROD_ID = #{PROD_ID}),
+		CUST_ORDER_NBR = #{SERIAL},
+		EFF_DATE = #{EFF_DATE},
+		EXP_DATE = #{EXP_DATE},
+		STATUS_CD = 0
+  	</insert>
+
+  	<!-- prod_inst_attr -->
+  	<select id="queryProdAttr" resultType="com.ideal.entity.ProdAttrEntity">
+  		select * from prod_attr where prod_id = #{PROD_ID};
+  	</select>
+  	<insert id="addProdInstAttrOrder">
+  		insert into prod_inst_attr
+  		set
+  		CUST_ID = #{USER_NAME},
+  		PROD_INST_ID = #{PROD_INST_ID},
+  		PROD_ID = #{PROD_ID},
+  		ATTR_ID = #{ATTR_ID},
+  		ATTR_VAL = #{ATTR_VALUE},
+		CUST_ORDER_NBR = #{SERIAL},
+		EFF_DATE = #{EFF_DATE},
+		EXP_DATE = #{EXP_DATE},
+		STATUS_CD = 0
+  	</insert>
+
+  	<!--  添加产品实例关系-->
+  	<select id="queryProdRel" resultType="com.ideal.entity.ProdRelEntity">
+  		select * from prod_rel where par_prod_id = #{PROD_ID};
+  	</select>
+  	<insert id="addProdInstRel" parameterType="com.ideal.entity.ProdInstRelEntity">
+  		insert into prod_inst_rel
+  		set
+  		CUST_ID = #{CUST_ID},
+  		PROD_ID = #{PROD_ID},
+  		PAR_PROD_ID = #{PAR_PROD_ID},
+  		PROD_INST_ID = #{PROD_INST_ID},
+		PAR_PROD_INST_ID = #{PAR_PROD_INST_ID},
+		EFF_DATE = #{EFF_DATE},
+		EXP_DATE = #{EXP_DATE},
+		STATUS_CD = #{STATUS_CD}
+  	</insert>
+
+  	<select id="queryProd" resultType="com.ideal.entity.ProductEntity">
+  		select p.* from prod_rel pr left join product p on  pr.par_prod_id = p.prod_id
+  		where pr.prod_id=#{PROD_ID}
+  	</select>
+
+  	<select id="queryOfferProdRel" resultType="com.ideal.entity.OfferProdRelEntity">
+  		select * from offer_prod_rel
+  		where prod_id=#{PROD_ID} and rel_type=#{REL_TYPE}
+  	</select>
+
+
+  	<insert id="addOfferProdInstRel" >
+  		insert into offer_prod_inst_rel
+  		set
+  		cust_id = #{USER_NAME},
+  		offer_id = #{OFFER_ID},
+  		prod_id = #{PROD_ID},
+  		OFFER_INST_ID = #{OFFER_INST_ID},
+		PROD_INST_ID = #{PROD_INST_ID},
+  		status_cd = 0
+  	</insert>
+
+	<delete id="clearOfferCart">
+  		delete from cart where
+  		offer_id= #{OFFER_ID} and user_name = #{USER_NAME}
+  	</delete>
+
+
+
+</mapper>

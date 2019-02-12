@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ideal.sales.mapper.SalesMapper">
+
+	<!-- 查询所有商品 -->
+	<select id="queryAllSales" resultType="com.ideal.sales.dto.SalesDto">
+			SELECT o.OFFER_ID ,o.OFFER_NAME,o.OFFER_DESC,o.PRICING,oa.DEFAULT_VALUE
+			FROM  offer o LEFT JOIN (SELECT oat.* FROM offer_attr oat LEFT JOIN dictionary d ON oat.ATTR_ID = d.DICTIONARY_ID
+			WHERE d.DICTIONARY_ID=1001) oa ON
+			o.offer_id=oa.offer_id ;
+	</select>
+	<!--  查看详情-->
+	<select id="querySalesByID" resultType="com.ideal.sales.dto.SalesProDto">
+			select p.PROD_ID,p.PROD_NAME,p.PROD_DESC,ppa.DEFAULT_VALUE
+			from  offer_prod_rel opr left join   product p on opr.PROD_ID = p.PROD_ID
+			LEFT JOIN (select pa.PROD_ID,pa.DEFAULT_VALUE from prod_attr pa
+			left join dictionary d on pa.ATTR_ID=d.dictionary_id
+			where d.DICTIONARY_ID=1002) ppa ON p.PROD_ID = ppa.PROD_ID
+			where opr.OFFER_ID = #{OFFER_ID} ;
+	</select>
+	<!--  查看详情-->
+	<select id="querySalesByProID" resultType="com.ideal.sales.dto.SalesProDto">
+			select p.PROD_ID,p.PROD_NAME,p.PROD_DESC,ppa.DEFAULT_VALUE
+			from  prod_rel pr left join product p on pr.prod_id=p.PROD_ID left join
+			(select pa.PROD_ID,pa.DEFAULT_VALUE from prod_attr pa
+			left join dictionary d on pa.ATTR_ID=d.dictionary_id
+			where d.DICTIONARY_ID=1002) ppa ON pr.PROD_ID = ppa.PROD_ID
+			where pr.PAR_PROD_ID = #{PROD_ID} ;
+	</select>
+
+	<!--  添加购物车-->
+	<insert id="addSalesCart">
+			INSERT INTO cart
+			SET
+			USER_NAME = #{USER_NAME} ,
+			OFFER_ID = #{OFFER_ID} ,
+			OFFER_NAME = (SELECT OFFER_NAME FROM offer WHERE OFFER_ID = #{OFFER_ID})
+	</insert>
+
+
+</mapper>

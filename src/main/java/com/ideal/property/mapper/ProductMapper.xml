@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ideal.property.mapper.ProductMapper">
+	
+  	<select id="getProduct" resultType="com.ideal.property.dto.ProductDto">
+  		select `PROD_DESC`,`PROD_TYPE` from product
+		where `PROD_ID` = #{productId}
+  	</select>
+  	
+</mapper>

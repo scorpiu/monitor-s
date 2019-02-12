@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ideal.property.mapper.ProdInstMapper">
+	
+  	<select id="getProdInst" resultType="com.ideal.property.dto.ProdInstDto">
+  		select `PROD_INST_ID`,`CUST_ID`,`PROD_INST_TYPE`,`PROD_INST_NAME` from prod_inst
+		where `PROD_INST_ID`=#{productId} and `CUST_ID`=#{username}
+  	</select>
+  	
+  	<select id="getProdInstByProInsId" resultType="com.ideal.property.dto.ProdInstDto">
+  		select `PROD_ID` from prod_inst
+		where `PROD_INST_ID` = #{product_inst_id}
+  	</select>
+  	
+</mapper>

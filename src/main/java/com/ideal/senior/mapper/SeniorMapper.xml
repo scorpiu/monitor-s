@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ideal.senior.mapper.SeniorMapper">
+
+  	<insert id="addDeal" >
+  		insert into senior (serial_number, user_id,senior_id,purchase_data,amount_money,duration)
+  		values (#{serial_number},#{user_id},#{senior_id},#{purchase_data},#{amount_money} ,#{duration})
+  	</insert>
+
+	<select id="querySenior" resultType="java.lang.String">
+		select senior_id 'senior' from senior where user_id = #{user}
+
+	</select>
+</mapper>

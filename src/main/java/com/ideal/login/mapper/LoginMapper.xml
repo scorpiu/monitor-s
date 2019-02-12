@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ideal.login.mapper.LoginMapper">
+
+
+
+    <select id="queryUserInfo" resultType="java.util.Map">
+  		select * FROM user_info where open_id = #{openId}
+  	</select>
+
+	<update id="updataUser" parameterType="java.util.Map">
+
+		UPDATE user_info SET status = 0 WHERE open_id = #{openId} and user_name = #{userName}
+	</update>
+
+	<select id="queryUserInfoByName" resultType="java.util.Map">
+
+		select * FROM user_info where user_name = #{userName}
+
+	</select>
+
+	<update id="upUser">
+		UPDATE user_info SET status = 0, open_id = #{openId} WHERE user_name = #{userName}
+	</update>
+	<update id="loginOut">
+		UPDATE user_info SET status = 1 WHERE user_name = #{userName}
+	</update>
+
+	<insert id="addUser">
+
+		insert  into user_info set
+		user_name = #{userName},
+		cell_phone = #{userName},
+		password =#{passWd},
+		open_id =#{openId},
+		status = 0
+
+	</insert>
+</mapper>

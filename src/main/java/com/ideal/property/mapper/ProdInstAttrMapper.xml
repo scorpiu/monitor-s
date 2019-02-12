@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ideal.property.mapper.ProdInstAttrMapper">
+	
+  	<select id="getProdInstAttr" resultType="com.ideal.property.dto.ProdInstAttrDto">
+  		select `ATTR_ID`,`ATTR_VAL` from prod_inst_attr
+		where `PROD_ID`=#{productId}
+  	</select>
+  	
+</mapper>

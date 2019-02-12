@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ideal.user.mapper.UserMapper">
+
+
+	<select id="queryAllUser" resultType="com.ideal.entity.UserInfoEntity">
+		select * from user_info;
+	</select>
+
+
+	<select id="queryUserBy" parameterType="com.ideal.entity.UserInfoEntity" resultType="com.ideal.entity.UserInfoEntity">
+		select * from user_info
+		<where>
+			1=1
+			<if test="id != null">
+			and id = #{id}
+			</if>
+			<if test="openid != null">
+			and openid = #{openid}
+			</if>
+			<if test="userName != null">
+			and userName = #{userName}
+			</if>
+			<if test="wechatId != null">
+			and wechatId = #{wechatId}
+			</if>
+			<if test="cellPhone != null">
+			and cellPhone = #{cellPhone}
+			</if>
+			<if test="email != null">
+			and email = #{email}
+			</if>
+		</where>
+	</select>
+
+
+
+	<select id="queryCartCount" resultType="java.util.Map" >
+		SELECT count(*) counts
+from cart where user_name = #{userId}
+	</select>
+
+</mapper>
