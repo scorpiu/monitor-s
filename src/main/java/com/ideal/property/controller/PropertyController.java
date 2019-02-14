@@ -25,7 +25,7 @@ public class PropertyController {
 	@Autowired 
 	private PropertyServiceImpl propertyService;
 	
-	//资产页面展示 
+	//资产页面展示 ALAN第三次提交_test
 	@RequestMapping("/showPropertys")
 	@ResponseBody
 	public List<Map> getPropertys(@RequestParam("data") String phoneNum){
