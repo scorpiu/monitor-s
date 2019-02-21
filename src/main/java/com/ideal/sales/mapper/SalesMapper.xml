@@ -36,6 +36,36 @@
 			OFFER_ID = #{OFFER_ID} ,
 			OFFER_NAME = (SELECT OFFER_NAME FROM offer WHERE OFFER_ID = #{OFFER_ID})
 	</insert>
+	
+	<!--  组合商品-->
+	<select id="getGroupOffer" resultType="com.ideal.order.dto.OrderCartDto">
+  		select o.offer_id,o.offer_name,o.offer_desc,o.pricing,oaa.default_value,o.offer_type PROD_TYPE
+		from offer o left join offer_rel orr on o.offer_id = orr.offer_id
+		left join (select oa.offer_id,oa.default_value from offer_attr oa left join dictionary d on oa.attr_id=d.dictionary_id where d.DICTIONARY_ID=1001) oaa
+		on o.offer_id=oaa.offer_id where orr.par_offer_id= #{OFFER_ID}and  o.offer_type="M"
+  	</select>
+  	
+  	<!--  产品-->
+	<select id="getAllProd" resultType="com.ideal.order.dto.OrderProdDto">
+		select p.prod_id,p.prod_name,p.prod_desc,oaa.default_value,p.FACTORY_PRICING,p.TOTAL_RESOURCES
+		from offer_prod_rel opr left join  product p on opr.prod_id=p.prod_id
+		left join (select pa.prod_id,pa.default_value from prod_attr pa left join dictionary d on pa.attr_id=d.dictionary_id where d.DICTIONARY_ID=1001) oaa
+		on p.prod_id=oaa.prod_id
+		<where>
+			opr.offer_id=#{OFFER_ID}
+			and  p.prod_type="M"
+		</where>
+	</select>
+  	<!--  计算资源-->
+	<select id="queryCount" resultType="Integer">
+		select IFNULL(sum(resources_num),0)
+		from resources_occupation
+   		where prod_id = #{prod_id}
+		AND start_Date &lt;= #{date}
+		AND end_Date &gt;= #{date}
+		AND OCCUPY_TYPE=1
+		OR (OCCUPY_TYPE=0 and NOW()-RECORD_TIME &lt;= 1800)
+	</select>
 
 
 </mapper>

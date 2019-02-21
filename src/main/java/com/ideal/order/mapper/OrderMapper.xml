@@ -201,7 +201,6 @@
   		where prod_id=#{PROD_ID} and rel_type=#{REL_TYPE}
   	</select>
 
-
   	<insert id="addOfferProdInstRel" >
   		insert into offer_prod_inst_rel
   		set
@@ -217,7 +216,22 @@
   		delete from cart where
   		offer_id= #{OFFER_ID} and user_name = #{USER_NAME}
   	</delete>
-
+  	<!-- 添加资源占用 -->
+  	<select id="queryProdType" resultType="java.lang.String">
+  		select prod_type from product where prod_id=#{PROD_ID};
+  	</select>
+	<insert id="addResourceNum">
+		insert into resources_occupation
+		set 
+		SERIAL = ${SERIAL},
+		OFFER_ID = ${OFFER_ID},
+		PROD_ID = ${PROD_ID},
+		RESOURCES_NUM = ${RESOURCES_NUM},
+		START_DATE = ${EFF_DATE},
+		END_DATE = ${EXP_DATE},
+		OCCUPY_TYPE = 1,
+		RECORD_TIME = ${RECORD_TIME}
+	</insert>
 
 
 </mapper>

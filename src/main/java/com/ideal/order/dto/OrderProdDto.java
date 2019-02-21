@@ -10,6 +10,7 @@ public class OrderProdDto {
 	private String PROD_DESC;
 	private String FACTORY_PRICING;
 	private String DEFAULT_VALUE;
+	private String TOTAL_RESOURCES;
 	public Integer getPROD_ID() {
 		return PROD_ID;
 	}
@@ -40,10 +41,17 @@ public class OrderProdDto {
 	public void setFACTORY_PRICING(String fACTORY_PRICING) {
 		FACTORY_PRICING = fACTORY_PRICING;
 	}
+	public String getTOTAL_RESOURCES() {
+		return TOTAL_RESOURCES;
+	}
+	public void setTOTAL_RESOURCES(String tOTAL_RESOURCES) {
+		TOTAL_RESOURCES = tOTAL_RESOURCES;
+	}
 	@Override
 	public String toString() {
 		return "OrderProdDto [PROD_ID=" + PROD_ID + ", PROD_NAME=" + PROD_NAME + ", PROD_DESC=" + PROD_DESC
-				+ ", FACTORY_PRICING=" + FACTORY_PRICING + ", DEFAULT_VALUE=" + DEFAULT_VALUE + "]";
+				+ ", FACTORY_PRICING=" + FACTORY_PRICING + ", DEFAULT_VALUE=" + DEFAULT_VALUE + ", TOTAL_RESOURCES="
+				+ TOTAL_RESOURCES + "]";
 	}
 	
 	

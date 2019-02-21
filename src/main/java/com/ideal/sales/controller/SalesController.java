@@ -48,6 +48,12 @@ public class SalesController {
 		
 		return salesServiceImpl.addSalesCart(OFFER_ID , USER_NAME);
 	}
+	//加入购物车前查询资源量
+	@RequestMapping("/queryResource")
+	@ResponseBody
+	public Object queryResource(String OFFER_ID, String startDate, String endDate){
+		return salesServiceImpl.queryResource(OFFER_ID,startDate,endDate);
+	}
     
     
     

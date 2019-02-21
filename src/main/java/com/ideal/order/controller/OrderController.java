@@ -38,7 +38,6 @@ public class OrderController {
 	@RequestMapping("/addCartOrder")
 	@ResponseBody
 	public List<OrderCartDto> addCartOrder(String order){
-		System.out.println(order);
 		return orderServiceImpl.addCartOrder(order);
 	}
 

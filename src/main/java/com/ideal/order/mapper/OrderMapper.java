@@ -61,5 +61,9 @@ public interface OrderMapper {
 
 	void clearOfferCart(Map<String, Object> map);
 
+	void addResourceNum(Map<String, Object> pmap);
+
+	String queryProdType(Map<String, Object> pmap);
+
 
 }

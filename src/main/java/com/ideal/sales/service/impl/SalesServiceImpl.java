@@ -1,6 +1,9 @@
 package com.ideal.sales.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +11,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ideal.filter.DifferentDays;
+import com.ideal.order.dto.OrderCartDto;
+import com.ideal.order.dto.OrderProdDto;
 import com.ideal.sales.dto.SalesByDto;
 import com.ideal.sales.dto.SalesDto;
 import com.ideal.sales.dto.SalesProDto;
@@ -78,6 +84,70 @@ public class SalesServiceImpl implements SalesService{
 		}
 
 		return msg;
+	}
+
+
+	@Override
+	public Object queryResource(String oFFER_ID, String startDate, String endDate) {
+		// TODO Auto-generated method stub
+		Map<String,Object> resourcesMap = new HashMap<String,Object>();
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("OFFER_ID", oFFER_ID);
+		List<OrderCartDto> flag = salesMapper.getGroupOffer(map);
+		List<OrderProdDto> prodDtos = new ArrayList<OrderProdDto>();
+		if(flag != null && flag.size()>0){
+			for (OrderCartDto zi : flag) {
+				map.put("OFFER_ID", zi.getOFFER_ID());
+				//产品获取
+				List<OrderProdDto> prodDto = salesMapper.getAllProd(map);
+				if(prodDto!=null){
+					prodDtos.addAll(prodDto);
+				}
+			}
+		}else{
+			//产品获取
+			map.put("OFFER_ID", oFFER_ID);
+			List<OrderProdDto> prodDto = salesMapper.getAllProd(map);
+			if(prodDto!=null){
+				prodDtos.addAll(prodDto);
+			}
+			
+		}
+		
+		for (OrderProdDto orderProdDto : prodDtos) {
+			String total_RESOURCES = orderProdDto.getTOTAL_RESOURCES();
+			//资源总数
+			int total = Integer.parseInt(total_RESOURCES);
+			
+			SimpleDateFormat dateSdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date parse = new Date();
+			Date parse2 = new Date();
+			try {
+				parse = dateSdf.parse(startDate);
+				parse2 = dateSdf.parse(endDate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+			System.out.println(sdf.format(new Date()));
+			//求日期差
+			int differentDays = DifferentDays.differentDays(parse, parse2);
+			for (int i = 0; i <= differentDays; i++) {
+				Map<String,Object> spaceMap = new HashMap<String,Object>();
+				//计算需要的日期
+				System.out.println(startDate);
+				System.out.println(i);
+				String plusDay = DifferentDays.plusDay(i, startDate);
+				System.out.println(plusDay);
+				spaceMap.put("date", plusDay);
+				spaceMap.put("prod_id", orderProdDto.getPROD_ID());
+				int resourceSum = salesMapper.queryCount(spaceMap);
+				resourcesMap.put(plusDay, total-resourceSum);
+			}
+			System.out.println(sdf.format(new Date()));
+		}
+		return resourcesMap;
 	}
 
 
