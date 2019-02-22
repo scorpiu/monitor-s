@@ -116,5 +116,5 @@ public class OfferRelEntity {
 				+ ", STATUS_DATE=" + STATUS_DATE + ", UPDATE_DATE=" + UPDATE_DATE + ", REMARK=" + REMARK + "]";
 	}
 
-	
+
 }

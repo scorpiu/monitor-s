@@ -202,12 +202,14 @@ public class OrderServiceImpl implements OrderService{
 					pmap.put("RECORD_TIME", sdf2.format(new Date()));
 					pmap.put("OFFER_ID", orderSubmitOfferDto.getOFFER_ID());
 					List<ProductEntity> queryProd = orderMapper.queryProd(pmap);
-					
-					
+
+
 					//非增值服务添加资源占用
-					String queryProdType = orderMapper.queryProdType(pmap);
-					if(queryProdType.equals("M")){
+					ProductEntity queryProdType = orderMapper.queryProdType(pmap);
+					if(queryProdType.getPROD_TYPE().equals("M")){
+						System.out.println(System.currentTimeMillis());
 						orderMapper.addResourceNum(pmap);
+						System.out.println(System.currentTimeMillis());
 					}
 					ProductEntity pe= new ProductEntity();
 					pe.setPROD_ID(orderSubmitProDto.getPROD_ID());
@@ -366,7 +368,7 @@ public class OrderServiceImpl implements OrderService{
 
 				}
 
-				
+
 				//清除购物车
 				orderMapper.clearOfferCart(map);
 

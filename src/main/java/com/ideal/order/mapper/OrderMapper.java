@@ -63,7 +63,7 @@ public interface OrderMapper {
 
 	void addResourceNum(Map<String, Object> pmap);
 
-	String queryProdType(Map<String, Object> pmap);
+	ProductEntity queryProdType(Map<String, Object> pmap);
 
 
 }
