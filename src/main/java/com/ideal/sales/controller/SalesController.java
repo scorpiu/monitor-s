@@ -44,9 +44,9 @@ public class SalesController {
 	//加入购物车
 	@RequestMapping("/addSalesCart")
 	@ResponseBody
-	public Object addSalesCart(String OFFER_ID , String USER_NAME){
+	public Object addSalesCart(String OFFER_ID , String USER_NAME , String startDate, String endDate){
 		
-		return salesServiceImpl.addSalesCart(OFFER_ID , USER_NAME);
+		return salesServiceImpl.addSalesCart(OFFER_ID , USER_NAME , startDate, endDate);
 	}
 	//加入购物车前查询资源量
 	@RequestMapping("/queryResource")

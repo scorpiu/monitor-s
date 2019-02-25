@@ -40,6 +40,13 @@ public class OrderController {
 	public List<OrderCartDto> addCartOrder(String order){
 		return orderServiceImpl.addCartOrder(order);
 	}
+	
+	//修改购物车时间和数量
+	@RequestMapping("/updateCartOrder")
+	@ResponseBody
+	public Object updateCartOrder(String SERIAL , String OFFER_ID ,String USER_NAME, String STARTDATE, String ENDDATE, String COUNTNUM){
+		return orderServiceImpl.updateCartOrder(SERIAL,OFFER_ID,USER_NAME ,STARTDATE,ENDDATE,COUNTNUM);
+	}
 
 
 

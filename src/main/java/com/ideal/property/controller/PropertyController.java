@@ -1,6 +1,7 @@
 package com.ideal.property.controller;
 
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,24 @@ public class PropertyController {
 	public List<Map> getPropertys(@RequestParam("data") String phoneNum){
 		return propertyService.getPropertiesForPage(phoneNum);
 	}
+	
+	
+	//预约前查询资源量
+	@RequestMapping("/queryPropertyResource")
+	@ResponseBody
+	public Map<String,Object> queryPropertyResource(String OFFER_INST_ID) throws ParseException{
+		return propertyService.queryPropertyResource(OFFER_INST_ID);
+	}
+	
+	//预约前查询资源量
+	/*@RequestMapping("/addPropertyResource")
+	@ResponseBody
+	public Object addPropertyResource(String OFFER_INST_ID){
+		return propertyService.addPropertyResource(OFFER_INST_ID);
+	}*/
+	
+	
+	
 	
 
     

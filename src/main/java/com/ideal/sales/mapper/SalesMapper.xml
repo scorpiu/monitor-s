@@ -4,10 +4,12 @@
 
 	<!-- 查询所有商品 -->
 	<select id="queryAllSales" resultType="com.ideal.sales.dto.SalesDto">
-			SELECT o.OFFER_ID ,o.OFFER_NAME,o.OFFER_DESC,o.PRICING,oa.DEFAULT_VALUE
+			SELECT o.OFFER_ID ,o.OFFER_NAME,o.OFFER_DESC,o.PRICING,oa.DEFAULT_VALUE,oaa.DEFAULT_VALUE UNIT
 			FROM  offer o LEFT JOIN (SELECT oat.* FROM offer_attr oat LEFT JOIN dictionary d ON oat.ATTR_ID = d.DICTIONARY_ID
 			WHERE d.DICTIONARY_ID=1001) oa ON
-			o.offer_id=oa.offer_id ;
+			o.offer_id=oa.offer_id LEFT JOIN (SELECT oat.* FROM offer_attr oat LEFT JOIN dictionary d ON oat.ATTR_ID = d.DICTIONARY_ID
+			WHERE d.DICTIONARY_ID=1006) oaa ON
+			o.offer_id=oaa.offer_id ;
 	</select>
 	<!--  查看详情-->
 	<select id="querySalesByID" resultType="com.ideal.sales.dto.SalesProDto">
@@ -34,8 +36,21 @@
 			SET
 			USER_NAME = #{USER_NAME} ,
 			OFFER_ID = #{OFFER_ID} ,
-			OFFER_NAME = (SELECT OFFER_NAME FROM offer WHERE OFFER_ID = #{OFFER_ID})
+			OFFER_NAME = (SELECT OFFER_NAME FROM offer WHERE OFFER_ID = #{OFFER_ID}),
+			STARTDATE = #{STARTDATE},
+			ENDDATE = #{ENDDATE},
+			record_time = now(),
+			count_num = 1
 	</insert>
+	<!-- 数量+1 -->
+	<update id="addSalesCartOne">
+			update cart set count_num = count_num +1 ,record_time = now()
+			where 
+			USER_NAME = #{USER_NAME} ,
+			OFFER_ID = #{OFFER_ID} ,
+			STARTDATE = #{STARTDATE},
+			ENDDATE = #{ENDDATE},
+	</update>
 	
 	<!--  组合商品-->
 	<select id="getGroupOffer" resultType="com.ideal.order.dto.OrderCartDto">
@@ -65,6 +80,27 @@
 		AND end_Date &gt;= #{date}
 		AND OCCUPY_TYPE=1
 		OR (OCCUPY_TYPE=0 and NOW()-RECORD_TIME &lt;= 1800)
+	</select>
+	
+	<!-- 判断商品时间 -->
+	<select id="querySalesCartByDate" resultType="com.ideal.sales.dto.SalesCartDto">
+		select * from cart
+		<where>
+			1=1
+			<if test="OFFER_ID !=null and OFFER_ID !=''">
+			and OFFER_ID = #{OFFER_ID}
+			</if>
+			<if test="USER_NAME !=null and USER_NAME !=''">
+			and USER_NAME = #{USER_NAME}
+			</if>
+			<if test="STARTDATE !=null and STARTDATE !=''">
+			and STARTDATE = #{STARTDATE}
+			</if>
+			<if test="ENDDATE !=null and ENDDATE !=''">
+			and ENDDATE = #{ENDDATE}
+			</if>
+		</where>
+	
 	</select>
 
 

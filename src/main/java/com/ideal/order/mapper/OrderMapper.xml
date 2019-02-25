@@ -42,11 +42,14 @@
 
 	<!--  购物车所有商品-->
 	<select id="getAllCart" resultType="com.ideal.order.dto.OrderCartDto">
-  		select o.offer_id,o.offer_name,o.offer_desc,o.pricing,oaa.default_value,o.offer_type PROD_TYPE
-		from cart c left join offer o
+  		select o.offer_id,o.offer_name,o.offer_desc,o.pricing,oaa.default_value,o.offer_type PROD_TYPE,
+		c.start_date STARTDATE,c.end_date ENDDATE,c.count_num,oaaa.default_value UNIT COUNTNUM from cart c left join offer o
 		on c.OFFER_ID = o.offer_id
 		left join (select oa.offer_id,oa.default_value from offer_attr oa left join dictionary d on oa.attr_id=d.dictionary_id where d.DICTIONARY_ID=1001) oaa
-		on o.offer_id=oaa.offer_id where c.user_name = #{USER_NAME}
+		on o.offer_id=oaa.offer_id 
+		left join (select oa.offer_id,oa.default_value from offer_attr oa left join dictionary d on oa.attr_id=d.dictionary_id where d.DICTIONARY_ID=1006) oaaa
+		on o.offer_id=oaaa.offer_id 
+		where c.user_name = #{USER_NAME}
   	</select>
 	<!--  组合商品-->
 	<select id="getGroupOffer" resultType="com.ideal.order.dto.OrderCartDto">
@@ -232,6 +235,23 @@
 		OCCUPY_TYPE = 1,
 		RECORD_TIME = #{RECORD_TIME}
 	</insert>
+	
+	<!-- 修改购物车 -->
+	
+	<update id="updateCartOrder">
+		update cart 
+		set 
+		<if test="START_DATE != NULL and START_DATE !='' ">
+		start_date = #{START_DATE},
+		</if>
+		<if test="END_DATE != NULL and END_DATE !='' ">
+		end_date = #{END_DATE},
+		</if>
+		<if test="COUNT_NUM != NULL and COUNT_NUM !='' ">
+		count_num = #{COUNT_NUM}
+		</if>
+		where offer_id=#{OFFER_ID} and user_name=#{USER_NAME} and serial=#{SERIAL}
+	</update>
 
 
 </mapper>

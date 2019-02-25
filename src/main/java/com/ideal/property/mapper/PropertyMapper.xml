@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ideal.property.mapper.PropertyMapper">
+	
+  	<select id="queryPropertyResources" resultType="Integer">
+  		select IFNULL(sum(resources_num),0)
+  		from resources_occupation
+  		where
+  		offer_id = (select offer_id from offer_inst where offer_inst_id = #{OFFER_INST_ID})
+  		and start_date = #{START_DATE}
+  		and start_time = #{START_TIME}
+  		AND OCCUPY_TYPE=1
+		OR (OCCUPY_TYPE=0 and NOW()-RECORD_TIME &lt;= 1800)
+  	</select>
+</mapper>

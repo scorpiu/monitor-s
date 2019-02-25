@@ -17,7 +17,7 @@ public interface SalesService {
 
 	SalesByDto querySalesBy(String oFFER_ID);
 
-	Object addSalesCart(String oFFER_ID, String uSER_NAME);
+	Object addSalesCart(String oFFER_ID, String uSER_NAME, String startDate, String endDate);
 
 	Object queryResource(String oFFER_ID, String startDate, String endDate);
 	

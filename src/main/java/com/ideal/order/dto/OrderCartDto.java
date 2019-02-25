@@ -8,7 +8,9 @@ import java.util.List;
 * 
 */
 public class OrderCartDto {
+	
 	private Integer OFFER_ID;
+	private String serial;
 	private String OFFER_NAME;
 	private String OFFER_DESC;
 	private String DEFAULT_VALUE;
@@ -17,8 +19,17 @@ public class OrderCartDto {
 	private List<OrderAddedDto> orderAddedDto;
 	private List<OrderProdDto> orderProdDto;
 	private Boolean added;
+	private String STARTDATE;
+	private String ENDDATE;
+	private String COUNTNUM;
+	private String UNIT;
 	
-	
+	public String getSerial() {
+		return serial;
+	}
+	public void setSerial(String serial) {
+		this.serial = serial;
+	}
 	public Integer getOFFER_ID() {
 		return OFFER_ID;
 	}
@@ -73,12 +84,40 @@ public class OrderCartDto {
 	public void setPROD_TYPE(String pROD_TYPE) {
 		PROD_TYPE = pROD_TYPE;
 	}
+	public String getSTARTDATE() {
+		return STARTDATE;
+	}
+	public void setSTARTDATE(String sTARTDATE) {
+		STARTDATE = sTARTDATE;
+	}
+	public String getENDDATE() {
+		return ENDDATE;
+	}
+	public void setENDDATE(String eNDDATE) {
+		ENDDATE = eNDDATE;
+	}
+	public String getCOUNTNUM() {
+		return COUNTNUM;
+	}
+	public void setCOUNTNUM(String cOUNTNUM) {
+		COUNTNUM = cOUNTNUM;
+	}
+	public String getUNIT() {
+		return UNIT;
+	}
+	public void setUNIT(String uNIT) {
+		UNIT = uNIT;
+	}
 	@Override
 	public String toString() {
-		return "OrderCartDto [OFFER_ID=" + OFFER_ID + ", OFFER_NAME=" + OFFER_NAME + ", OFFER_DESC=" + OFFER_DESC
-				+ ", DEFAULT_VALUE=" + DEFAULT_VALUE + ", PRICING=" + PRICING + ", PROD_TYPE=" + PROD_TYPE
-				+ ", orderAddedDto=" + orderAddedDto + ", orderProdDto=" + orderProdDto + ", added=" + added + "]";
+		return "OrderCartDto [OFFER_ID=" + OFFER_ID + ", serial=" + serial + ", OFFER_NAME=" + OFFER_NAME
+				+ ", OFFER_DESC=" + OFFER_DESC + ", DEFAULT_VALUE=" + DEFAULT_VALUE + ", PRICING=" + PRICING
+				+ ", PROD_TYPE=" + PROD_TYPE + ", orderAddedDto=" + orderAddedDto + ", orderProdDto=" + orderProdDto
+				+ ", added=" + added + ", STARTDATE=" + STARTDATE + ", ENDDATE=" + ENDDATE + ", COUNTNUM=" + COUNTNUM
+				+ ", UNIT=" + UNIT + "]";
 	}
+	
+	
 	
 	
 	

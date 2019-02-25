@@ -10,6 +10,7 @@ public class SalesDto {
 	private String OFFER_DESC;
 	private String PRICING;
 	private String DEFAULT_VALUE;
+	private String UNIT;
 	public String getOFFER_ID() {
 		return OFFER_ID;
 	}
@@ -40,11 +41,18 @@ public class SalesDto {
 	public void setDEFAULT_VALUE(String dEFAULT_VALUE) {
 		DEFAULT_VALUE = dEFAULT_VALUE;
 	}
+	public String getUNIT() {
+		return UNIT;
+	}
+	public void setUNIT(String uNIT) {
+		UNIT = uNIT;
+	}
 	@Override
 	public String toString() {
 		return "SalesDto [OFFER_ID=" + OFFER_ID + ", OFFER_NAME=" + OFFER_NAME + ", OFFER_DESC=" + OFFER_DESC
-				+ ", PRICING=" + PRICING + ", dEFAULT_VALUE=" + DEFAULT_VALUE + "]";
+				+ ", PRICING=" + PRICING + ", DEFAULT_VALUE=" + DEFAULT_VALUE + ", UNIT=" + UNIT + "]";
 	}
+	
 	
 	
 	

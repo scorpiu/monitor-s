@@ -10,6 +10,9 @@ import java.util.List;
 */
 public class OrderSubmitOfferDto {
 	private String OFFER_ID;
+	private String EFF_DATE;
+	private String EXP_DATE;
+	private String RESOURCES_NUM;
 	private List<OrderSubmitProDto> proDtoList;
 	private List<OrderSubmitAddedDto> addedDtoList;
 	public String getOFFER_ID() {
@@ -30,5 +33,24 @@ public class OrderSubmitOfferDto {
 	public void setAddedDtoList(List<OrderSubmitAddedDto> addedDtoList) {
 		this.addedDtoList = addedDtoList;
 	}
+	public String getEFF_DATE() {
+		return EFF_DATE;
+	}
+	public void setEFF_DATE(String eFF_DATE) {
+		EFF_DATE = eFF_DATE;
+	}
+	public String getEXP_DATE() {
+		return EXP_DATE;
+	}
+	public void setEXP_DATE(String eXP_DATE) {
+		EXP_DATE = eXP_DATE;
+	}
+	public String getRESOURCES_NUM() {
+		return RESOURCES_NUM;
+	}
+	public void setRESOURCES_NUM(String rESOURCES_NUM) {
+		RESOURCES_NUM = rESOURCES_NUM;
+	}
+	
 	
 }

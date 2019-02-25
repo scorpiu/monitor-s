@@ -15,6 +15,6 @@ public interface OrderService {
 
 	List<OrderCartDto> addCartOrder(String order);
 
-	List<OrderCartDto> addCartOrder2(String order);
+	Object updateCartOrder(String SERIAL ,String oFFER_ID,String USER_NAME ,String sTARTDATE, String eNDDATE, String cOUNTNUM);
 
 }

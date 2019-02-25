@@ -65,5 +65,7 @@ public interface OrderMapper {
 
 	ProductEntity queryProdType(Map<String, Object> pmap);
 
+	void updateCartOrder(Map<String, Object> map);
+
 
 }

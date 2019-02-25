@@ -1,6 +1,9 @@
 package com.ideal.property.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.ideal.filter.DifferentDays;
 import com.ideal.property.dto.DictionaryDto;
 import com.ideal.property.dto.OfferInstDto;
 import com.ideal.property.dto.OfferInstRelDto;
@@ -24,6 +28,7 @@ import com.ideal.property.mapper.OfferProdInstRelMapper;
 import com.ideal.property.mapper.ProdInstAttrMapper;
 import com.ideal.property.mapper.ProdInstMapper;
 import com.ideal.property.mapper.ProductMapper;
+import com.ideal.property.mapper.PropertyMapper;
 import com.ideal.property.mapper.UserInfoMapper;
 
 
@@ -53,6 +58,9 @@ public class PropertyServiceImpl {
 
 	@Autowired
 	private OfferInstRelMapper offerInstRelMapper;
+	
+	@Autowired
+	private PropertyMapper propertyMapper;
 
 	public List<Map> getPropertiesForPage(String phoneNum){
 		List<Map> list_data = new ArrayList<Map>();
@@ -336,17 +344,46 @@ public class PropertyServiceImpl {
 	}
 
 
-	public static void main(String args[]){
-		List list = new ArrayList();
-		for(int i=0; i<3; i++){
-			Map<String, String> map = new HashMap<String, String>();
-			map.put(i+"", i*111+"");
+//	public static void main(String args[]){
+//		List list = new ArrayList();
+//		for(int i=0; i<3; i++){
+//			Map<String, String> map = new HashMap<String, String>();
+//			map.put(i+"", i*111+"");
+//
+//			System.out.println(map.hashCode());
+//			list.add(map);
+//		}
+//		System.out.println("list:"+list);
+//
+//	}
 
-			System.out.println(map.hashCode());
-			list.add(map);
+	//预约查询资源占用
+	public Map<String, Object> queryPropertyResource(String oFFER_INST_ID) throws ParseException {
+		// TODO Auto-generated method stub
+		
+		Map<String , Object> resourcesMap = new HashMap<String , Object>();
+		SimpleDateFormat nowSimple = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat timeSimple = new SimpleDateFormat("HH:mm:ss");
+		String nowDate = nowSimple.format(new Date());
+		int days = 7;
+		for (int i = 1; i <= days; i++) {
+			Map<String,Object> dateMap = new HashMap<String,Object>();
+			String plusDay = DifferentDays.plusDay(i, nowDate);
+			String startTime = "08:00:00";
+			long time = timeSimple.parse(startTime).getTime();
+			for (int j = 0; j < 5; j++) {
+				time += (j*7200*1000);
+				String format = timeSimple.format(new Date(time));
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("OFFER_INST_ID", oFFER_INST_ID);
+				map.put("START_TIME", format);
+				map.put("START_DATE", plusDay);
+				int sum = propertyMapper.queryPropertyResources(map);
+				dateMap.put(format, 5-sum);
+			}
+			resourcesMap.put(plusDay, dateMap);
 		}
-		System.out.println("list:"+list);
-
+		return resourcesMap;
 	}
 
 

@@ -11,6 +11,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ideal.entity.CartEntity;
 import com.ideal.filter.DifferentDays;
 import com.ideal.order.dto.OrderCartDto;
 import com.ideal.order.dto.OrderProdDto;
@@ -67,7 +68,7 @@ public class SalesServiceImpl implements SalesService{
 
 
 	@Override
-	public Object addSalesCart(String oFFER_ID, String uSER_NAME) {
+	public Object addSalesCart(String oFFER_ID, String uSER_NAME, String startDate, String endDate) {
 		// TODO Auto-generated method stub
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -75,13 +76,29 @@ public class SalesServiceImpl implements SalesService{
 
 		map.put("OFFER_ID", oFFER_ID);
 		map.put("USER_NAME", uSER_NAME);
-		try {
-			salesMapper.addSalesCart(map);
-		} catch (Exception e) {
-			// TODO: handle exception
-			msg = "加入失败";
-			e.printStackTrace();
+		map.put("STARTDATE", startDate);
+		map.put("ENDDATE", endDate);
+		//判断商品时间
+		List<CartEntity> cartList = salesMapper.querySalesCartByDate(map);
+		if(cartList.size()>0){
+			try {
+				salesMapper.addSalesCartOne(map);
+			} catch (Exception e) {
+				// TODO: handle exception
+				msg = "加入失败";
+				e.printStackTrace();
+			}
+		}else{
+			try {
+				salesMapper.addSalesCart(map);
+			} catch (Exception e) {
+				// TODO: handle exception
+				msg = "加入失败";
+				e.printStackTrace();
+			}
 		}
+		
+		
 
 		return msg;
 	}
@@ -130,16 +147,12 @@ public class SalesServiceImpl implements SalesService{
 				e.printStackTrace();
 			}
 			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-			System.out.println(sdf.format(new Date()));
 			//求日期差
 			int differentDays = DifferentDays.differentDays(parse, parse2);
 			for (int i = 0; i <= differentDays; i++) {
 				Map<String,Object> spaceMap = new HashMap<String,Object>();
 				//计算需要的日期
-				System.out.println(startDate);
-				System.out.println(i);
 				String plusDay = DifferentDays.plusDay(i, startDate);
-				System.out.println(plusDay);
 				spaceMap.put("date", plusDay);
 				spaceMap.put("prod_id", orderProdDto.getPROD_ID());
 				int resourceSum = salesMapper.queryCount(spaceMap);

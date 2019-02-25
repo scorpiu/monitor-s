@@ -16,7 +16,6 @@ import com.ideal.entity.OfferAttrEntity;
 import com.ideal.entity.OfferEntity;
 import com.ideal.entity.OfferInstRelEntity;
 import com.ideal.entity.OfferProdRelEntity;
-import com.ideal.entity.OfferRelEntity;
 import com.ideal.entity.ProdAttrEntity;
 import com.ideal.entity.ProdInstRelEntity;
 import com.ideal.entity.ProdRelEntity;
@@ -51,8 +50,6 @@ public class OrderServiceImpl implements OrderService{
 		List<OrderCartDto> cart = new ArrayList<OrderCartDto>();
 		//该用户购物车所有商品
 		List<OrderCartDto> allCart = orderMapper.getAllCart(map);
-		List<OrderCartDto> groupOffer = new ArrayList<OrderCartDto>();
-		List<OrderCartDto> coup = new ArrayList<OrderCartDto>();
 
 		for (int i = 0; i < allCart.size(); i++) {
 			OrderCartDto orderCartDto = allCart.get(i);
@@ -110,16 +107,16 @@ public class OrderServiceImpl implements OrderService{
 
 
 			String user_NAME = orderSubmitDto.getUSER_NAME();
-			String eff_DATE = orderSubmitDto.getEFF_DATE();
-			String exp_DATE = orderSubmitDto.getEXP_DATE();
+//			String eff_DATE = orderSubmitDto.getEFF_DATE();
+//			String exp_DATE = orderSubmitDto.getEXP_DATE();
 			String pricing = orderSubmitDto.getPRICING();
 			SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHHmmss");
 			SimpleDateFormat sdf2 = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 			String SERIAL = sdf.format(new Date());
 			map.put("SERIAL", SERIAL);
 			map.put("USER_NAME", user_NAME);
-			map.put("EFF_DATE", eff_DATE);
-			map.put("EXP_DATE", exp_DATE);
+//			map.put("EFF_DATE", eff_DATE);
+//			map.put("EXP_DATE", exp_DATE);
 			map.put("PRICING", pricing);
 			map.put("ORDER_DATE", sdf2.format(new Date()));
 			map.put("STATUS", "已结算");
@@ -142,8 +139,8 @@ public class OrderServiceImpl implements OrderService{
 
 					map.put("OFFER_ID", offerEntity.getOFFER_ID());
 					offerEntity.setUSER_NAME(user_NAME);
-					offerEntity.setEFF_DATE(eff_DATE);
-					offerEntity.setEXP_DATE(exp_DATE);
+					offerEntity.setEFF_DATE(orderSubmitOfferDto.getEFF_DATE());
+					offerEntity.setEXP_DATE(orderSubmitOfferDto.getEXP_DATE());
 					offerEntity.setSERIAL(SERIAL);
 					orderMapper.addOfferOrder(offerEntity);
 					if(offerEntity.getOFFER_ID().equals(off.getOFFER_ID())){
@@ -158,8 +155,8 @@ public class OrderServiceImpl implements OrderService{
 						map1.put("USER_NAME",map.get("USER_NAME"));
 						map1.put("OFFER_ID",map.get("OFFER_ID"));
 						map1.put("SERIAL",map.get("SERIAL"));
-						map1.put("EFF_DATE",map.get("EFF_DATE"));
-						map1.put("EXP_DATE",map.get("EXP_DATE"));
+						map1.put("EFF_DATE",orderSubmitOfferDto.getEFF_DATE());
+						map1.put("EXP_DATE",orderSubmitOfferDto.getEXP_DATE());
 						map1.put("ATTR_ID", offerAttrEntity.getATTR_ID());
 						map1.put("ATTR_VALUE", offerAttrEntity.getDEFAULT_VALUE());
 						map1.put("OFFER_INST_ID", offerEntity.getOFFER_INST_ID());
@@ -181,8 +178,8 @@ public class OrderServiceImpl implements OrderService{
 						oi.setOFFER_INST_ID(offerEntity.getOFFER_INST_ID());
 						oi.setPAR_OFFER_INST_ID(fatherList.get(0).getOFFER_INST_ID());
 						oi.setSTATUS_CD("已上架");
-						oi.setEFF_DATE(eff_DATE);
-						oi.setEXP_DATE(exp_DATE);
+						oi.setEFF_DATE(orderSubmitOfferDto.getEFF_DATE());
+						oi.setEXP_DATE(orderSubmitOfferDto.getEXP_DATE());
 						orderMapper.addOfferRel(oi);
 					}
 				}
@@ -196,20 +193,17 @@ public class OrderServiceImpl implements OrderService{
 					pmap.put("PROD_ID", prod_ID);
 					pmap.put("USER_NAME", user_NAME);
 					pmap.put("SERIAL", SERIAL);
-					pmap.put("EFF_DATE", eff_DATE);
-					pmap.put("EXP_DATE", exp_DATE);
-					pmap.put("RESOURCES_NUM", orderSubmitProDto.getRESOURCES_NUM());
+					pmap.put("EFF_DATE", orderSubmitOfferDto.getEFF_DATE());
+					pmap.put("EXP_DATE", orderSubmitOfferDto.getEXP_DATE());
+					pmap.put("RESOURCES_NUM", orderSubmitOfferDto.getRESOURCES_NUM());
 					pmap.put("RECORD_TIME", sdf2.format(new Date()));
 					pmap.put("OFFER_ID", orderSubmitOfferDto.getOFFER_ID());
 					List<ProductEntity> queryProd = orderMapper.queryProd(pmap);
 
-
 					//非增值服务添加资源占用
 					ProductEntity queryProdType = orderMapper.queryProdType(pmap);
 					if(queryProdType.getPROD_TYPE().equals("M")){
-						System.out.println(System.currentTimeMillis());
 						orderMapper.addResourceNum(pmap);
-						System.out.println(System.currentTimeMillis());
 					}
 					ProductEntity pe= new ProductEntity();
 					pe.setPROD_ID(orderSubmitProDto.getPROD_ID());
@@ -220,8 +214,8 @@ public class OrderServiceImpl implements OrderService{
 						pmap.put("PROD_ID", productEntity.getPROD_ID());
 						productEntity.setUSER_NAME(user_NAME);
 						productEntity.setSERIAL(SERIAL);
-						productEntity.setEFF_DATE(eff_DATE);
-						productEntity.setEXP_DATE(exp_DATE);
+						productEntity.setEFF_DATE(orderSubmitOfferDto.getEFF_DATE());
+						productEntity.setEXP_DATE(orderSubmitOfferDto.getEXP_DATE());
 						orderMapper.addProdInstOrder(productEntity);
 
 						if(productEntity.getPROD_ID().equals(pe.getPROD_ID())){
@@ -270,8 +264,8 @@ public class OrderServiceImpl implements OrderService{
 							pr.setPROD_INST_ID(productEntity.getPROD_INST_ID());
 							pr.setPAR_PROD_INST_ID(fatherProdList.get(0).getPROD_ID());
 							pr.setSTATUS_CD("已上架");
-							pr.setEFF_DATE(eff_DATE);
-							pr.setEXP_DATE(exp_DATE);
+							pr.setEFF_DATE(orderSubmitOfferDto.getEFF_DATE());
+							pr.setEXP_DATE(orderSubmitOfferDto.getEXP_DATE());
 							orderMapper.addProdInstRel(pr);
 						}
 					}
@@ -285,8 +279,8 @@ public class OrderServiceImpl implements OrderService{
 					amap.put("PROD_ID", prod_ID);
 					amap.put("USER_NAME", user_NAME);
 					amap.put("SERIAL", SERIAL);
-					amap.put("EFF_DATE", eff_DATE);
-					amap.put("EXP_DATE", exp_DATE);
+					amap.put("EFF_DATE", orderSubmitOfferDto.getEFF_DATE());
+					amap.put("EXP_DATE", orderSubmitOfferDto.getEXP_DATE());
 					List<ProductEntity> queryProd = orderMapper.queryProd(amap);
 
 					ProductEntity pe= new ProductEntity();
@@ -299,8 +293,8 @@ public class OrderServiceImpl implements OrderService{
 						amap.put("PROD_ID", productEntity.getPROD_ID());
 						productEntity.setUSER_NAME(user_NAME);
 						productEntity.setSERIAL(SERIAL);
-						productEntity.setEFF_DATE(eff_DATE);
-						productEntity.setEXP_DATE(exp_DATE);
+						productEntity.setEFF_DATE(orderSubmitOfferDto.getEFF_DATE());
+						productEntity.setEXP_DATE(orderSubmitOfferDto.getEXP_DATE());
 						orderMapper.addProdInstOrder(productEntity);
 
 						if(productEntity.getPROD_ID().equals(pe.getPROD_ID())){
@@ -324,8 +318,8 @@ public class OrderServiceImpl implements OrderService{
 							pr.setPROD_ID(prodRelEntity.getPROD_ID());
 							pr.setPAR_PROD_ID(prodRelEntity.getPAR_PROD_ID());
 							pr.setSTATUS_CD("已上架");
-							pr.setEFF_DATE(eff_DATE);
-							pr.setEXP_DATE(exp_DATE);
+							pr.setEFF_DATE(orderSubmitOfferDto.getEFF_DATE());
+							pr.setEXP_DATE(orderSubmitOfferDto.getEXP_DATE());
 							orderMapper.addProdInstRel(pr);
 						}
 						//和offer的关系
@@ -360,8 +354,8 @@ public class OrderServiceImpl implements OrderService{
 							pr.setPROD_INST_ID(productEntity.getPROD_INST_ID());
 							pr.setPAR_PROD_INST_ID(fatherAddedList.get(0).getPROD_ID());
 							pr.setSTATUS_CD("已上架");
-							pr.setEFF_DATE(eff_DATE);
-							pr.setEXP_DATE(exp_DATE);
+							pr.setEFF_DATE(orderSubmitOfferDto.getEFF_DATE());
+							pr.setEXP_DATE(orderSubmitOfferDto.getEXP_DATE());
 							orderMapper.addProdInstRel(pr);
 						}
 					}
@@ -380,8 +374,16 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public List<OrderCartDto> addCartOrder2(String order) {
+	public Object updateCartOrder(String  sERIAL,String oFFER_ID , String uSER_NAME , String sTARTDATE, String eNDDATE, String cOUNTNUM) {
 		// TODO Auto-generated method stub
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("OFFER_ID", oFFER_ID);
+		map.put("USER_NAME", uSER_NAME);
+		map.put("START_DATE", sTARTDATE);
+		map.put("END_DATE", eNDDATE);
+		map.put("COUNT_NUM", cOUNTNUM);
+		map.put("SERIAL", sERIAL);
+		orderMapper.updateCartOrder(map);
 		return null;
 	}
 

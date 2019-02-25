@@ -3,6 +3,7 @@ package com.ideal.sales.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.ideal.entity.CartEntity;
 import com.ideal.entity.OfferEntity;
 import com.ideal.order.dto.OrderCartDto;
 import com.ideal.order.dto.OrderProdDto;
@@ -28,6 +29,10 @@ public interface SalesMapper {
 	List<OrderProdDto> getAllProd(Map<String, Object> map);
 
 	int queryCount(Map<String, Object> spaceMap);
+
+	List<CartEntity> querySalesCartByDate(Map<String, Object> map);
+
+	void addSalesCartOne(Map<String, Object> map);
 	
 	
 	

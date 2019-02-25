@@ -7,7 +7,6 @@ package com.ideal.order.dto;
 public class OrderSubmitProDto {
 	private String PROD_ID;
 	private String PRICING;
-	private String RESOURCES_NUM;
 
 	public String getPROD_ID() {
 		return PROD_ID;
@@ -25,13 +24,7 @@ public class OrderSubmitProDto {
 		PRICING = pRICING;
 	}
 
-	public String getRESOURCES_NUM() {
-		return RESOURCES_NUM;
-	}
-
-	public void setRESOURCES_NUM(String rESOURCES_NUM) {
-		RESOURCES_NUM = rESOURCES_NUM;
-	}
+	
 	
 	
 	
