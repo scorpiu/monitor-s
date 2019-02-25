@@ -37,8 +37,8 @@
 			USER_NAME = #{USER_NAME} ,
 			OFFER_ID = #{OFFER_ID} ,
 			OFFER_NAME = (SELECT OFFER_NAME FROM offer WHERE OFFER_ID = #{OFFER_ID}),
-			STARTDATE = #{STARTDATE},
-			ENDDATE = #{ENDDATE},
+			START_DATE = #{STARTDATE},
+			END_DATE = #{ENDDATE},
 			record_time = now(),
 			count_num = 1
 	</insert>
