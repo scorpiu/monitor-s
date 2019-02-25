@@ -45,13 +45,13 @@
 	<!-- 数量+1 -->
 	<update id="addSalesCartOne">
 			update cart set count_num = count_num +1 ,record_time = now()
-			where 
-			USER_NAME = #{USER_NAME} ,
-			OFFER_ID = #{OFFER_ID} ,
-			STARTDATE = #{STARTDATE},
-			ENDDATE = #{ENDDATE},
+			where
+			USER_NAME = #{USER_NAME} and
+			OFFER_ID = #{OFFER_ID} and
+			START_DATE = #{STARTDATE} and
+			END_DATE = #{ENDDATE}
 	</update>
-	
+
 	<!--  组合商品-->
 	<select id="getGroupOffer" resultType="com.ideal.order.dto.OrderCartDto">
   		select o.offer_id,o.offer_name,o.offer_desc,o.pricing,oaa.default_value,o.offer_type PROD_TYPE
@@ -59,7 +59,7 @@
 		left join (select oa.offer_id,oa.default_value from offer_attr oa left join dictionary d on oa.attr_id=d.dictionary_id where d.DICTIONARY_ID=1001) oaa
 		on o.offer_id=oaa.offer_id where orr.par_offer_id= #{OFFER_ID}and  o.offer_type="M"
   	</select>
-  	
+
   	<!--  产品-->
 	<select id="getAllProd" resultType="com.ideal.order.dto.OrderProdDto">
 		select p.prod_id,p.prod_name,p.prod_desc,oaa.default_value,p.FACTORY_PRICING,p.TOTAL_RESOURCES
@@ -81,7 +81,7 @@
 		AND OCCUPY_TYPE=1
 		OR (OCCUPY_TYPE=0 and NOW()-RECORD_TIME &lt;= 1800)
 	</select>
-	
+
 	<!-- 判断商品时间 -->
 	<select id="querySalesCartByDate" resultType="com.ideal.sales.dto.SalesCartDto">
 		select * from cart
@@ -94,13 +94,13 @@
 			and USER_NAME = #{USER_NAME}
 			</if>
 			<if test="STARTDATE !=null and STARTDATE !=''">
-			and STAR_TDATE = #{STARTDATE}
+			and START_DATE = #{STARTDATE}
 			</if>
 			<if test="ENDDATE !=null and ENDDATE !=''">
 			and END_DATE = #{ENDDATE}
 			</if>
 		</where>
-	
+
 	</select>
 
 

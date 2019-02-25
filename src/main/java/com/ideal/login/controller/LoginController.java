@@ -96,7 +96,8 @@ public class LoginController {
 
     @RequestMapping("/loginAregister")
     @ResponseBody
-    public Map<String, Object> loginAregister(String code, String userName, String passWd){
+    public Map<String, Object> loginAregister(String code, String userName, String passWd, String formId){
+        System.out.println(formId);
         Map<String, Object> loginInfo = new HashMap<>();
         String appID = "wxe73443b05ccf371f";
 
