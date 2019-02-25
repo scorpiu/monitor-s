@@ -94,10 +94,10 @@
 			and USER_NAME = #{USER_NAME}
 			</if>
 			<if test="STARTDATE !=null and STARTDATE !=''">
-			and STARTDATE = #{STARTDATE}
+			and STAR_TDATE = #{STARTDATE}
 			</if>
 			<if test="ENDDATE !=null and ENDDATE !=''">
-			and ENDDATE = #{ENDDATE}
+			and END_DATE = #{ENDDATE}
 			</if>
 		</where>
 	
