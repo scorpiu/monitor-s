@@ -55,7 +55,7 @@
 			<if test="STARTDAT !=null and STARTDATE != ''">
 			and START_DATE = #{STARTDATE}
 			</if>
-			<if test="END_DATE != null and END_DATE !=''">
+			<if test="ENDDATE != null and ENDDATE !=''">
 			and END_DATE = #{ENDDATE}
 			</if>
 			</where>
