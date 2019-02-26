@@ -7,8 +7,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import com.ideal.entity.CartEntity;
@@ -27,10 +30,13 @@ import com.ideal.sales.service.SalesService;
 *
 */
 @Service
+@EnableAsync
 public class SalesServiceImpl implements SalesService{
 
 	@Autowired
 	private SalesMapper salesMapper;
+	@Autowired
+	private ResCount resCount;
 
 
 	@Override
@@ -149,19 +155,27 @@ public class SalesServiceImpl implements SalesService{
 			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 			//求日期差
 			int differentDays = DifferentDays.differentDays(parse, parse2);
+			List<Future<String>> list = new ArrayList<>(); 
 			for (int i = 0; i <= differentDays; i++) {
 				Map<String,Object> spaceMap = new HashMap<String,Object>();
 				//计算需要的日期
 				String plusDay = DifferentDays.plusDay(i, startDate);
 				spaceMap.put("date", plusDay);
 				spaceMap.put("prod_id", orderProdDto.getPROD_ID());
-				int resourceSum = salesMapper.queryCount(spaceMap);
-				resourcesMap.put(plusDay, total-resourceSum);
+				Future<String> future = resCount.resourcesCount(plusDay,total,spaceMap,resourcesMap);
+				list.add(future);
 			}
-			System.out.println(sdf.format(new Date()));
+			for (Future<String> future : list) {
+				while (true) { 
+					if (future.isDone()) {
+						break;    
+					}
+				}
+			}
 		}
 		return resourcesMap;
 	}
+	
 
 
 }

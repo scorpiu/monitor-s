@@ -376,15 +376,21 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	public Object updateCartOrder(String  sERIAL,String oFFER_ID , String uSER_NAME , String sTARTDATE, String eNDDATE, String cOUNTNUM) {
 		// TODO Auto-generated method stub
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("OFFER_ID", oFFER_ID);
-		map.put("USER_NAME", uSER_NAME);
-		map.put("START_DATE", sTARTDATE);
-		map.put("END_DATE", eNDDATE);
-		map.put("COUNT_NUM", cOUNTNUM);
-		map.put("SERIAL", sERIAL);
-		orderMapper.updateCartOrder(map);
-		return null;
+		String msg = "修改成功";
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("OFFER_ID", oFFER_ID);
+			map.put("USER_NAME", uSER_NAME);
+			map.put("START_DATE", sTARTDATE);
+			map.put("END_DATE", eNDDATE);
+			map.put("COUNT_NUM", cOUNTNUM);
+			map.put("SERIAL", sERIAL);
+			orderMapper.updateCartOrder(map);
+		} catch (Exception e) {
+			// TODO: handle exception
+			msg = "修改失败";
+		}
+		return msg;
 	}
 
 

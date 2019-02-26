@@ -11,4 +11,6 @@ public interface PropertyMapper {
 
 	int queryPropertyResources(Map<String, Object> map);
 
+	void addPropertyResource(Map<String, Object> map);
+
 }

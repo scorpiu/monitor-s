@@ -358,20 +358,20 @@ public class PropertyServiceImpl {
 //	}
 
 	//预约查询资源占用
-	public Map<String, Object> queryPropertyResource(String oFFER_INST_ID) throws ParseException {
+	public List<Map<String, Object>> queryPropertyResource(String oFFER_INST_ID) throws ParseException {
 		// TODO Auto-generated method stub
 		
-		Map<String , Object> resourcesMap = new HashMap<String , Object>();
+		List<Map<String , Object>> resourcesMap = new ArrayList<Map<String , Object>>();
 		SimpleDateFormat nowSimple = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat timeSimple = new SimpleDateFormat("HH:mm:ss");
 		String nowDate = nowSimple.format(new Date());
 		int days = 7;
 		for (int i = 1; i <= days; i++) {
-			Map<String,Object> dateMap = new HashMap<String,Object>();
 			String plusDay = DifferentDays.plusDay(i, nowDate);
 			String startTime = "08:00:00";
 			long time = timeSimple.parse(startTime).getTime();
 			for (int j = 0; j < 5; j++) {
+				Map<String,Object> dateMap = new HashMap<String,Object>();
 				time += (j*7200*1000);
 				String format = timeSimple.format(new Date(time));
 				Map<String, Object> map = new HashMap<String, Object>();
@@ -379,11 +379,39 @@ public class PropertyServiceImpl {
 				map.put("START_TIME", format);
 				map.put("START_DATE", plusDay);
 				int sum = propertyMapper.queryPropertyResources(map);
-				dateMap.put(format, 5-sum);
+//				dateMap.put(nowSimple.parse(plusDay).getTime()+timeSimple.parse(format).getTime()+"", 5-sum);
+				dateMap.put("timestamp",nowSimple.parse(plusDay).getTime()+timeSimple.parse(format).getTime());
+				dateMap.put("value",5-sum);
+				
+				resourcesMap.add(dateMap);
 			}
-			resourcesMap.put(plusDay, dateMap);
 		}
 		return resourcesMap;
+	}
+
+
+	public Object addPropertyResource(String oFFER_INST_ID, String uSER_NAME, String sTART_TIME) {
+		// TODO Auto-generated method stub
+		String msg = "等待管理员确认";
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat dateSimple = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat timeSimple = new SimpleDateFormat("HH:mm:ss");
+			String date = dateSimple.format(new Date(Long.parseLong(sTART_TIME)));
+			String starttime = timeSimple.format(new Date(Long.parseLong(sTART_TIME)));
+			String endtime = timeSimple.format(new Date(Long.parseLong(sTART_TIME)+7200*1000));
+			map.put("OFFER_INST_ID", oFFER_INST_ID);
+			map.put("DATE", date);
+			map.put("STARTTIME", starttime);
+			map.put("ENDTIME", endtime);
+			propertyMapper.addPropertyResource(map);
+		} catch (Exception e) {
+			// TODO: handle exception
+			msg = "预约失败";
+		}
+		
+		return msg;
 	}
 
 

@@ -37,16 +37,16 @@ public class PropertyController {
 	//预约前查询资源量
 	@RequestMapping("/queryPropertyResource")
 	@ResponseBody
-	public Map<String,Object> queryPropertyResource(String OFFER_INST_ID) throws ParseException{
+	public List<Map<String,Object>> queryPropertyResource(String OFFER_INST_ID) throws ParseException{
 		return propertyService.queryPropertyResource(OFFER_INST_ID);
 	}
 	
-	//预约前查询资源量
-	/*@RequestMapping("/addPropertyResource")
+	//预约占用资源
+	@RequestMapping("/addPropertyResource")
 	@ResponseBody
-	public Object addPropertyResource(String OFFER_INST_ID){
-		return propertyService.addPropertyResource(OFFER_INST_ID);
-	}*/
+	public Object addPropertyResource(String OFFER_INST_ID, String USER_NAME , String START_TIME){
+		return propertyService.addPropertyResource(OFFER_INST_ID,USER_NAME,START_TIME);
+	}
 	
 	
 	

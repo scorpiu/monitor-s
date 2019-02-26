@@ -12,4 +12,19 @@
   		AND OCCUPY_TYPE=1
 		OR (OCCUPY_TYPE=0 and NOW()-RECORD_TIME &lt;= 1800)
   	</select>
+  	<insert id="addPropertyResource">
+  		insert into resources_occupation
+  		set serial = (select CUST_ORDER_NBR from offer_inst where OFFER_INST_ID=#{OFFER_INST_ID}),
+  		offer_id = (select OFFER_ID from offer_inst where OFFER_INST_ID=#{OFFER_INST_ID}),
+  		prod_id = (select prod_id from offer_prod_inst_rel where OFFER_INST_ID=#{OFFER_INST_ID}),
+  		resources_num = 1,
+  		start_date = #{DATE},
+  		end_date = #{DATE},
+  		start_time = #{STARTTIME},
+  		end_time = #{ENDTIME},
+  		OCCUPY_TYPE = 0,
+  		RECORD_TIME = now()
+  	</insert>
+  	
+  	
 </mapper>
