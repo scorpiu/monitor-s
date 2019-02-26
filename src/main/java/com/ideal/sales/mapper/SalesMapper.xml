@@ -40,7 +40,7 @@
 			<if test="STARTDATE != null and STARTDATE != ''">
 			START_DATE = #{STARTDATE},
 			</if>
-			<if test="END_DATE != null and END_DATE !=''">
+			<if test="ENDDATE != null and ENDDATE !=''">
 			END_DATE = #{ENDDATE},
 			</if>
 			record_time = now(),
