@@ -108,7 +108,7 @@
 		<if test="EFF_DATE != null and EFF_DATE !=''">
 		EFF_DATE = #{EFF_DATE},
 		</if>
-		<if test="END_DATE != null and END_DATE !=''">
+		<if test="EXP_DATE != null and EXP_DATE !=''">
 		EXP_DATE = #{EXP_DATE},
 		</if>
 		STATUS_CD = 0
@@ -129,7 +129,7 @@
 		<if test="EFF_DATE != null and EFF_DATE !=''">
 		EFF_DATE = #{EFF_DATE},
 		</if>
-		<if test="END_DATE != null and END_DATE !=''">
+		<if test="EXP_DATE != null and EXP_DATE !=''">
 		EXP_DATE = #{EXP_DATE},
 		</if>
 		STATUS_CD = 0
@@ -149,7 +149,7 @@
 		<if test="EFF_DATE != null and EFF_DATE !=''">
 		EFF_DATE = #{EFF_DATE},
 		</if>
-		<if test="END_DATE != null and END_DATE !=''">
+		<if test="EXP_DATE != null and EXP_DATE !=''">
 		EXP_DATE = #{EXP_DATE},
 		</if>
 		STATUS_CD = #{STATUS_CD}
@@ -169,7 +169,7 @@
 		<if test="EFF_DATE != null and EFF_DATE !=''">
 		EFF_DATE = #{EFF_DATE},
 		</if>
-		<if test="END_DATE != null and END_DATE !=''">
+		<if test="EXP_DATE != null and EXP_DATE !=''">
 		EXP_DATE = #{EXP_DATE},
 		</if>
 		STATUS_CD = 0
@@ -191,7 +191,7 @@
 		<if test="EFF_DATE != null and EFF_DATE !=''">
 		EFF_DATE = #{EFF_DATE},
 		</if>
-		<if test="END_DATE != null and END_DATE !=''">
+		<if test="EXP_DATE != null and EXP_DATE !=''">
 		EXP_DATE = #{EXP_DATE},
 		</if>
 		STATUS_CD = 0
@@ -212,7 +212,7 @@
 		<if test="EFF_DATE != null and EFF_DATE !=''">
 		EFF_DATE = #{EFF_DATE},
 		</if>
-		<if test="END_DATE != null and END_DATE !=''">
+		<if test="EXP_DATE != null and EXP_DATE !=''">
 		EXP_DATE = #{EXP_DATE},
 		</if>
 		STATUS_CD = #{STATUS_CD}
@@ -258,7 +258,7 @@
 		START_DATE = #{EFF_DATE},
 		OCCUPY_TYPE = 1,
 		</if>
-		<if test="END_DATE != null and END_DATE !=''">
+		<if test="EXP_DATE != null and EXP_DATE !=''">
 		END_DATE = #{EXP_DATE},
 		</if>
 		<if test="EFF_DATE == null or EFF_DATE ==''">
