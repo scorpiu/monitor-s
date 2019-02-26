@@ -4,7 +4,7 @@
 
 	<!-- 查询所有商品 -->
 	<select id="queryAllSales" resultType="com.ideal.sales.dto.SalesDto">
-			SELECT o.OFFER_ID ,o.OFFER_NAME,o.OFFER_DESC,o.PRICING,oa.DEFAULT_VALUE,oaa.DEFAULT_VALUE UNIT
+			SELECT o.OFFER_ID ,o.OFFER_NAME,o.OFFER_DESC,o.OFFER_TYPE,o.PRICING,oa.DEFAULT_VALUE,oaa.DEFAULT_VALUE UNIT
 			FROM  offer o LEFT JOIN (SELECT oat.* FROM offer_attr oat LEFT JOIN dictionary d ON oat.ATTR_ID = d.DICTIONARY_ID
 			WHERE d.DICTIONARY_ID=1001) oa ON
 			o.offer_id=oa.offer_id LEFT JOIN (SELECT oat.* FROM offer_attr oat LEFT JOIN dictionary d ON oat.ATTR_ID = d.DICTIONARY_ID

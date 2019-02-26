@@ -8,6 +8,7 @@ public class SalesDto {
 	private String OFFER_ID;
 	private String OFFER_NAME;
 	private String OFFER_DESC;
+	private String OFFER_TYPE;
 	private String PRICING;
 	private String DEFAULT_VALUE;
 	private String UNIT;
@@ -47,11 +48,19 @@ public class SalesDto {
 	public void setUNIT(String uNIT) {
 		UNIT = uNIT;
 	}
+	public String getOFFER_TYPE() {
+		return OFFER_TYPE;
+	}
+	public void setOFFER_TYPE(String oFFER_TYPE) {
+		OFFER_TYPE = oFFER_TYPE;
+	}
 	@Override
 	public String toString() {
 		return "SalesDto [OFFER_ID=" + OFFER_ID + ", OFFER_NAME=" + OFFER_NAME + ", OFFER_DESC=" + OFFER_DESC
-				+ ", PRICING=" + PRICING + ", DEFAULT_VALUE=" + DEFAULT_VALUE + ", UNIT=" + UNIT + "]";
+				+ ", OFFER_TYPE=" + OFFER_TYPE + ", PRICING=" + PRICING + ", DEFAULT_VALUE=" + DEFAULT_VALUE + ", UNIT="
+				+ UNIT + "]";
 	}
+	
 	
 	
 	
