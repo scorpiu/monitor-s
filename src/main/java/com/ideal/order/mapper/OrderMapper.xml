@@ -105,8 +105,12 @@
    		OFFER_INST_TYPE = (select offer_type from offer where offer_id = #{OFFER_ID}),
 		OFFER_INST_NAME = (select offer_name from offer where offer_id = #{OFFER_ID}),
 		CUST_ORDER_NBR = #{SERIAL},
+		<if test="EFF_DATE != null and EFF_DATE !=''">
 		EFF_DATE = #{EFF_DATE},
+		</if>
+		<if test="END_DATE != null and END_DATE !=''">
 		EXP_DATE = #{EXP_DATE},
+		</if>
 		STATUS_CD = 0
   	</insert>
   	<!--  添加订单 offer_attr_inst-->
@@ -122,8 +126,12 @@
   		ATTR_ID = #{ATTR_ID},
   		ATTR_VAL = #{ATTR_VALUE},
 		CUST_ORDER_NBR = #{SERIAL},
+		<if test="EFF_DATE != null and EFF_DATE !=''">
 		EFF_DATE = #{EFF_DATE},
+		</if>
+		<if test="END_DATE != null and END_DATE !=''">
 		EXP_DATE = #{EXP_DATE},
+		</if>
 		STATUS_CD = 0
   	</insert>
   	<!--  添加订单offer_rel_inst-->
@@ -138,8 +146,12 @@
   		PAR_OFFER_ID = #{PAR_OFFER_ID},
   		OFFER_INST_ID = #{OFFER_INST_ID},
 		PAR_OFFER_INST_ID = #{PAR_OFFER_INST_ID},
+		<if test="EFF_DATE != null and EFF_DATE !=''">
 		EFF_DATE = #{EFF_DATE},
+		</if>
+		<if test="END_DATE != null and END_DATE !=''">
 		EXP_DATE = #{EXP_DATE},
+		</if>
 		STATUS_CD = #{STATUS_CD}
   	</insert>
 
@@ -154,8 +166,12 @@
   		PROD_ID = #{PROD_ID},
 		PROD_INST_NAME = (select prod_name from product where PROD_ID = #{PROD_ID}),
 		CUST_ORDER_NBR = #{SERIAL},
+		<if test="EFF_DATE != null and EFF_DATE !=''">
 		EFF_DATE = #{EFF_DATE},
+		</if>
+		<if test="END_DATE != null and END_DATE !=''">
 		EXP_DATE = #{EXP_DATE},
+		</if>
 		STATUS_CD = 0
   	</insert>
 
@@ -172,8 +188,12 @@
   		ATTR_ID = #{ATTR_ID},
   		ATTR_VAL = #{ATTR_VALUE},
 		CUST_ORDER_NBR = #{SERIAL},
+		<if test="EFF_DATE != null and EFF_DATE !=''">
 		EFF_DATE = #{EFF_DATE},
+		</if>
+		<if test="END_DATE != null and END_DATE !=''">
 		EXP_DATE = #{EXP_DATE},
+		</if>
 		STATUS_CD = 0
   	</insert>
 
@@ -189,8 +209,12 @@
   		PAR_PROD_ID = #{PAR_PROD_ID},
   		PROD_INST_ID = #{PROD_INST_ID},
 		PAR_PROD_INST_ID = #{PAR_PROD_INST_ID},
+		<if test="EFF_DATE != null and EFF_DATE !=''">
 		EFF_DATE = #{EFF_DATE},
+		</if>
+		<if test="END_DATE != null and END_DATE !=''">
 		EXP_DATE = #{EXP_DATE},
+		</if>
 		STATUS_CD = #{STATUS_CD}
   	</insert>
 
@@ -230,9 +254,16 @@
 		OFFER_ID = #{OFFER_ID},
 		PROD_ID = #{PROD_ID},
 		RESOURCES_NUM = #{RESOURCES_NUM},
+		<if test="EFF_DATE != null and EFF_DATE !=''">
 		START_DATE = #{EFF_DATE},
-		END_DATE = #{EXP_DATE},
 		OCCUPY_TYPE = 1,
+		</if>
+		<if test="END_DATE != null and END_DATE !=''">
+		END_DATE = #{EXP_DATE},
+		</if>
+		<if test="EFF_DATE == null or EFF_DATE ==''">
+		OCCUPY_TYPE = 0,
+		</if>
 		RECORD_TIME = #{RECORD_TIME}
 	</insert>
 	

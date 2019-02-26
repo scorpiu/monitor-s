@@ -37,19 +37,28 @@
 			USER_NAME = #{USER_NAME} ,
 			OFFER_ID = #{OFFER_ID} ,
 			OFFER_NAME = (SELECT OFFER_NAME FROM offer WHERE OFFER_ID = #{OFFER_ID}),
+			<if test="STARTDATE != null and STARTDATE != ''">
 			START_DATE = #{STARTDATE},
+			</if>
+			<if test="END_DATE != null and END_DATE !=''">
 			END_DATE = #{ENDDATE},
+			</if>
 			record_time = now(),
 			count_num = 1
 	</insert>
 	<!-- 数量+1 -->
 	<update id="addSalesCartOne">
 			update cart set count_num = count_num +1 ,record_time = now()
-			where
+			<where>
 			USER_NAME = #{USER_NAME} and
-			OFFER_ID = #{OFFER_ID} and
-			START_DATE = #{STARTDATE} and
-			END_DATE = #{ENDDATE}
+			OFFER_ID = #{OFFER_ID} 
+			<if test="STARTDAT !=null and STARTDATE != ''">
+			and START_DATE = #{STARTDATE}
+			</if>
+			<if test="END_DATE != null and END_DATE !=''">
+			and END_DATE = #{ENDDATE}
+			</if>
+			</where>
 	</update>
 
 	<!--  组合商品-->
