@@ -1,13 +1,18 @@
 server:
-  port: 8086
+  port: 443
+  ssl:
+    key-store: src/main/resources/www.mihawke.com.jks
+    key-store-password: 2jk97v6869qcp1
+    key-store-type: JKS
+
 spring:
   mvc:
 
   datasource:
     platform: mysql
     driverClassName: com.mysql.jdbc.Driver
-#    url: jdbc:mysql://148.70.67.204:3306/monitor2?characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
-    url: jdbc:mysql://localhost:3306/monitor2?characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+    url: jdbc:mysql://148.70.67.204:3306/monitor2?characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+#    url: jdbc:mysql://localhost:3306/monitor2?characterEncoding=UTF-8&characterSetResults=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false
     username: root
     password: '123456'
     maxActive: 11
@@ -32,3 +37,4 @@ pagehelper:
 #坑点0 配置mybatis的xml位置
 mybatis:
   mapper-locations: classpath:mapper/*.xml
+

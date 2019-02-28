@@ -71,6 +71,7 @@
                     <include>*.properties</include>
                     <include>*.xml</include>
                     <include>enc_pri</include>
+                    <include>*.jks</include>
                 </includes>
             </resource>
 

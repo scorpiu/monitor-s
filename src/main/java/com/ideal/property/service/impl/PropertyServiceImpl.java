@@ -58,7 +58,7 @@ public class PropertyServiceImpl {
 
 	@Autowired
 	private OfferInstRelMapper offerInstRelMapper;
-	
+
 	@Autowired
 	private PropertyMapper propertyMapper;
 
@@ -360,7 +360,7 @@ public class PropertyServiceImpl {
 	//预约查询资源占用
 	public List<Map<String, Object>> queryPropertyResource(String oFFER_INST_ID) throws ParseException {
 		// TODO Auto-generated method stub
-		
+
 		List<Map<String , Object>> resourcesMap = new ArrayList<Map<String , Object>>();
 		SimpleDateFormat nowSimple = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat timeSimple = new SimpleDateFormat("HH:mm:ss");
@@ -382,7 +382,7 @@ public class PropertyServiceImpl {
 //				dateMap.put(nowSimple.parse(plusDay).getTime()+timeSimple.parse(format).getTime()+"", 5-sum);
 				dateMap.put("timestamp",nowSimple.parse(plusDay).getTime()+timeSimple.parse(format).getTime());
 				dateMap.put("value",5-sum);
-				
+
 				resourcesMap.add(dateMap);
 			}
 		}
@@ -410,11 +410,39 @@ public class PropertyServiceImpl {
 			// TODO: handle exception
 			msg = "预约失败";
 		}
-		
+
 		return msg;
 	}
 
 
+	public List<String> getContact(String userName){
+		return propertyMapper.getContact(userName);
+	}
 
+
+	public String addCustomerService(String prodInstId,String userName, String contactName, long time){
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHHmmss");
+		String serial = sdf.format(new Date());
+
+		SimpleDateFormat dateSimple = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat timeSimple = new SimpleDateFormat("HH:mm:ss");
+		String reservationDate = dateSimple.format(new Date(time));
+		String reservationTime = timeSimple.format(new Date(time));
+		System.out.println( "-------------serial-------" +  serial);
+		System.out.println( "-------------date-------" +  reservationDate);
+		System.out.println( "-------------starttime-------" +  reservationTime);
+
+		Map<String,String> param = new HashMap<>();
+		param.put("serial", serial);
+		param.put("userName", userName);
+		param.put("prodInstId", prodInstId);
+		param.put("contactName", contactName);
+		param.put("reservationDate", reservationDate);
+		param.put("reservationTime", reservationTime);
+		param.put("status", "0");//状态为0，标识未确认
+
+		propertyMapper.addCustomerService(param);
+		return serial;
+	}
 
 }

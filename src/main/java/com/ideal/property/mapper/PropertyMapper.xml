@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ideal.property.mapper.PropertyMapper">
-	
+
   	<select id="queryPropertyResources" resultType="Integer">
   		select IFNULL(sum(resources_num),0)
   		from resources_occupation
@@ -25,6 +25,21 @@
   		OCCUPY_TYPE = 0,
   		RECORD_TIME = now()
   	</insert>
-  	
-  	
+
+	<select id="getContact" resultType="java.lang.String">
+		select contact_user from contact where user_name=#{userName}
+	</select>
+
+
+	<insert id="addCustomerService">
+		INSERT into customer_service
+		set serial = #{serial},
+		user_name = #{userName},
+		reservation_date = #{reservationDate},
+		reservation_time = #{reservationTime},
+		contact_name = #{contactName},
+		prod_inst_id = #{prodInstId},
+		status = #{serial}
+
+	</insert>
 </mapper>

@@ -22,37 +22,53 @@ import com.ideal.property.service.impl.PropertyServiceImpl;
 
 @Controller
 public class PropertyController {
-	
-	@Autowired 
+
+	@Autowired
 	private PropertyServiceImpl propertyService;
-	
+
 	//资产页面展示 ALAN第四次提交_test
 	@RequestMapping("/showPropertys")
 	@ResponseBody
 	public List<Map> getPropertys(@RequestParam("data") String phoneNum){
 		return propertyService.getPropertiesForPage(phoneNum);
 	}
-	
-	
+
+
 	//预约前查询资源量
 	@RequestMapping("/queryPropertyResource")
 	@ResponseBody
 	public List<Map<String,Object>> queryPropertyResource(String OFFER_INST_ID) throws ParseException{
 		return propertyService.queryPropertyResource(OFFER_INST_ID);
 	}
-	
+
 	//预约占用资源
 	@RequestMapping("/addPropertyResource")
 	@ResponseBody
 	public Object addPropertyResource(String OFFER_INST_ID, String USER_NAME , String START_TIME){
 		return propertyService.addPropertyResource(OFFER_INST_ID,USER_NAME,START_TIME);
 	}
-	
-	
-	
-	
 
-    
-	
-	
+	//查看用户下的联系人
+	@RequestMapping("/getContact")
+	@ResponseBody
+	public List<String> getContact(String userName){
+
+		return propertyService.getContact(userName);
+	}
+
+	//新增预约信息
+	@RequestMapping("/addCustomerService")
+	@ResponseBody
+	public String addCustomerService(String prodInstId,String userName, String contactName, long time){
+
+		String SERICL = propertyService.addCustomerService(prodInstId, userName, contactName, time);
+
+		return SERICL;
+	}
+
+
+
+
+
+
 }
