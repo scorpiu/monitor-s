@@ -37,8 +37,8 @@ public class PropertyController {
 	//预约前查询资源量
 	@RequestMapping("/queryPropertyResource")
 	@ResponseBody
-	public List<Map<String,Object>> queryPropertyResource(String OFFER_INST_ID) throws ParseException{
-		return propertyService.queryPropertyResource(OFFER_INST_ID);
+	public List<Map<String,Object>> queryPropertyResource(String PROD_INST_ID) throws ParseException{
+		return propertyService.queryPropertyResource(PROD_INST_ID);
 	}
 	
 	//预约占用资源

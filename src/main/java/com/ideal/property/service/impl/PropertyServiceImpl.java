@@ -358,7 +358,7 @@ public class PropertyServiceImpl {
 //	}
 
 	//预约查询资源占用
-	public List<Map<String, Object>> queryPropertyResource(String oFFER_INST_ID) throws ParseException {
+	public List<Map<String, Object>> queryPropertyResource(String pROD_INST_ID) throws ParseException {
 		// TODO Auto-generated method stub
 		
 		List<Map<String , Object>> resourcesMap = new ArrayList<Map<String , Object>>();
@@ -375,7 +375,7 @@ public class PropertyServiceImpl {
 				time += (j*7200*1000);
 				String format = timeSimple.format(new Date(time));
 				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("OFFER_INST_ID", oFFER_INST_ID);
+				map.put("PROD_INST_ID", pROD_INST_ID);
 				map.put("START_TIME", format);
 				map.put("START_DATE", plusDay);
 				int sum = propertyMapper.queryPropertyResources(map);

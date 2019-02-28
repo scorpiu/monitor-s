@@ -6,7 +6,7 @@
   		select IFNULL(sum(resources_num),0)
   		from resources_occupation
   		where
-  		offer_id = (select offer_id from offer_inst where offer_inst_id = #{OFFER_INST_ID})
+  		prod_id = (select prod_id from prod_inst where prod_inst_id = #{PROD_INST_ID})
   		and start_date = #{START_DATE}
   		and start_time = #{START_TIME}
   		AND OCCUPY_TYPE=1
