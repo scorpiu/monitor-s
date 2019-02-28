@@ -132,7 +132,7 @@ public class PropertyServiceImpl {
 						//通过PROD_INST_ID 主键
 						/*ProdInstDto prodInst = prodInstMapper.getProdInst(productId);*/
 
-						//alan_2.27_添加product_instid
+						//alan_2.27_添加product_instid 
 						//map_product_jichu.put("productid", productId);//产品id
 						map_product_jichu.put("productid", prodInst.getPROD_INST_ID());//产品id
 
