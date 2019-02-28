@@ -1,3 +1,4 @@
+
 package com.ideal.property.service.impl;
 
 import java.text.ParseException;
@@ -131,8 +132,9 @@ public class PropertyServiceImpl {
 						//通过PROD_INST_ID 主键
 						/*ProdInstDto prodInst = prodInstMapper.getProdInst(productId);*/
 
-						map_product_jichu.put("productid", productId);//产品id
-						map_product_jichu.put("title", prodInst.getPROD_INST_NAME());//产品名称
+						//alan_2.27_添加product_instid
+						//map_product_jichu.put("productid", productId);//产品id
+						map_product_jichu.put("productid", prodInst.getPROD_INST_ID());//产品id
 
 						List<ProdInstAttrDto> prodInstAttrs = prodInstAttrMapper.getProdInstAttr(productId);
 
@@ -215,7 +217,9 @@ public class PropertyServiceImpl {
 						//通过PROD_INST_ID 主键
 						/*ProdInstDto prodInst = prodInstMapper.getProdInst(productId);*/
 
-						map_product.put("productid", productId);//产品id
+						//alan_2.27_添加product_instid
+//						map_product.put("productid", productId);//产品id 
+						map_product.put("productid", prodInst.getPROD_INST_ID());//产品id
 						map_product.put("title", prodInst.getPROD_INST_NAME());//产品名称
 
 						List<ProdInstAttrDto> prodInstAttrs = prodInstAttrMapper.getProdInstAttr(productId);
@@ -380,8 +384,8 @@ public class PropertyServiceImpl {
 				map.put("START_DATE", plusDay);
 				int sum = propertyMapper.queryPropertyResources(map);
 //				dateMap.put(nowSimple.parse(plusDay).getTime()+timeSimple.parse(format).getTime()+"", 5-sum);
-				dateMap.put("timestamp",nowSimple.parse(plusDay).getTime()+timeSimple.parse(format).getTime());
-				dateMap.put("value",5-sum);
+				dateMap.put("timeStamp",nowSimple.parse(plusDay).getTime()+timeSimple.parse(format).getTime());
+				dateMap.put("state",5-sum);
 				
 				resourcesMap.add(dateMap);
 			}
