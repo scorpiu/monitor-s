@@ -62,13 +62,9 @@ public class PropertyController {
 	public String addCustomerService(String prodInstId,String userName, String contactName, long time){
 
 		String SERICL = propertyService.addCustomerService(prodInstId, userName, contactName, time);
-
+		propertyService.addPropertyResource(prodInstId,userName,String.valueOf(time));
 		return SERICL;
 	}
-
-
-
-
 
 
 }
