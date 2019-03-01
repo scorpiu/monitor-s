@@ -110,7 +110,7 @@ public class OrderServiceImpl implements OrderService{
 //			String eff_DATE = orderSubmitDto.getEFF_DATE();
 //			String exp_DATE = orderSubmitDto.getEXP_DATE();
 			String pricing = orderSubmitDto.getPRICING();
-			SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHHmmss");
+			SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddHHmmssSSS");
 			SimpleDateFormat sdf2 = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 			String SERIAL = sdf.format(new Date());
 			map.put("SERIAL", SERIAL);
