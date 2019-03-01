@@ -131,7 +131,9 @@ public class PropertyServiceImpl {
 						//通过PROD_INST_ID 主键
 						/*ProdInstDto prodInst = prodInstMapper.getProdInst(productId);*/
 
-						map_product_jichu.put("productid", productId);//产品id
+						//alan_2.27_添加product_instid
+						//map_product_jichu.put("productid", productId);//产品id
+						map_product_jichu.put("productid", prodInst.getPROD_INST_ID());//产品id
 						map_product_jichu.put("title", prodInst.getPROD_INST_NAME());//产品名称
 
 						List<ProdInstAttrDto> prodInstAttrs = prodInstAttrMapper.getProdInstAttr(productId);
@@ -215,7 +217,9 @@ public class PropertyServiceImpl {
 						//通过PROD_INST_ID 主键
 						/*ProdInstDto prodInst = prodInstMapper.getProdInst(productId);*/
 
-						map_product.put("productid", productId);//产品id
+						//alan_2.27_添加product_instid
+//						map_product.put("productid", productId);//产品id 
+						map_product.put("productid", prodInst.getPROD_INST_ID());//产品id
 						map_product.put("title", prodInst.getPROD_INST_NAME());//产品名称
 
 						List<ProdInstAttrDto> prodInstAttrs = prodInstAttrMapper.getProdInstAttr(productId);
@@ -380,8 +384,8 @@ public class PropertyServiceImpl {
 				map.put("START_DATE", plusDay);
 				int sum = propertyMapper.queryPropertyResources(map);
 //				dateMap.put(nowSimple.parse(plusDay).getTime()+timeSimple.parse(format).getTime()+"", 5-sum);
-				dateMap.put("timestamp",nowSimple.parse(plusDay).getTime()+timeSimple.parse(format).getTime());
-				dateMap.put("value",5-sum);
+				dateMap.put("timeStamp",nowSimple.parse(plusDay).getTime()+timeSimple.parse(format).getTime());
+				dateMap.put("state",5-sum); 
 
 				resourcesMap.add(dateMap);
 			}
@@ -426,8 +430,8 @@ public class PropertyServiceImpl {
 
 		SimpleDateFormat dateSimple = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat timeSimple = new SimpleDateFormat("HH:mm:ss");
-		String reservationDate = dateSimple.format(new Date(time * 1000));
-		String reservationTime = timeSimple.format(new Date(time * 1000));
+		String reservationDate = dateSimple.format(new Date(time));
+		String reservationTime = timeSimple.format(new Date(time));
 		System.out.println( "-------------serial-------" +  serial);
 		System.out.println( "-------------date-------" +  reservationDate);
 		System.out.println( "-------------starttime-------" +  reservationTime);
@@ -445,17 +449,4 @@ public class PropertyServiceImpl {
 		return serial;
 	}
 
-
-//    public static void main(String[] args) {
-//        long time = 1551448800l;
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        SimpleDateFormat dateSimple = new SimpleDateFormat("yyyy-MM-dd");
-//        SimpleDateFormat timeSimple = new SimpleDateFormat("HH:mm:ss");
-//        String reservationDate = dateSimple.format(new Date(time * 1000));
-//        String reservationTime = timeSimple.format(new Date(time * 1000));
-//        String dd = sdf.format(new Date(time * 1000));
-//        System.out.println( "-------------seriddal-------" +  dd);
-//        System.out.println( "-------------date-------" +  reservationDate);
-//        System.out.println( "-------------starttime-------" +  reservationTime);
-//    }
 }
