@@ -430,8 +430,8 @@ public class PropertyServiceImpl {
 
 		SimpleDateFormat dateSimple = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat timeSimple = new SimpleDateFormat("HH:mm:ss");
-		String reservationDate = dateSimple.format(new Date(time));
-		String reservationTime = timeSimple.format(new Date(time));
+		String reservationDate = dateSimple.format(new Date(time*1000));
+		String reservationTime = timeSimple.format(new Date(time*1000));
 		System.out.println( "-------------serial-------" +  serial);
 		System.out.println( "-------------date-------" +  reservationDate);
 		System.out.println( "-------------starttime-------" +  reservationTime);
