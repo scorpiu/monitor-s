@@ -3,6 +3,12 @@
 <mapper namespace="com.ideal.user.mapper.UserMapper">
 
 
+	<resultMap id="userResultMap" type="com.ideal.entity.UserInfoEntity">
+		<id property="id" column="user_id" />
+		<result property="username" column="user_name"/>
+		<result property="password" column="hashed_password"/>
+	</resultMap>
+
 	<select id="queryAllUser" resultType="com.ideal.entity.UserInfoEntity">
 		select * from user_info;
 	</select>

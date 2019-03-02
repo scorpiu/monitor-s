@@ -1,10 +1,11 @@
 package com.ideal.login.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ideal.login.mapper.LoginMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
@@ -20,7 +21,7 @@ import java.util.Map;
  * @Description:
  * 微信登录请求地址：GET https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code
  * appid	string		是	小程序 appId       wxe4b8de111db51cf5                   wxe73443b05ccf371f
- * secret	string		是	小程序 appSecret   ae7295ace6dee7edff2030bae13258a2     01b154dfc0bdb95f41b6a8f16e48d906
+ * secret	string		是	小程序 appSecret   ae7295ace6dee7edff2030bae13258a2     4d4ff9cfeb05ab89b75e950ae9b09fad
  * js_code	string		是	登录时获取的 code
  * grant_type	string		是	授权类型，此处只需填写 authorization_code
  */
@@ -36,6 +37,40 @@ public class LoginController {
     LoginMapper loginMapper;
 
 
+    @RequestMapping("/sendMsg")
+    @ResponseBody
+    public String sendMsg(){
+
+
+        String appID = "wxe73443b05ccf371f";
+
+        String secret = "4d4ff9cfeb05ab89b75e950ae9b09fad";
+
+        String accessTokenUrl = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential"+"&appid="+appID+"&secret="+secret;
+
+        RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.getForObject(accessTokenUrl, String.class);
+
+        JSONObject jsStr = JSONObject.parseObject(result);
+
+
+        String accessToken = (String) jsStr.get("access_token");
+        System.out.println("accessToken : " + accessToken);
+
+
+        String sendCustomerMessageUrl = "https://api.weixin.qq.com/cgi-bin/message/custom/send";
+
+        MultiValueMap<String, String> requestEntity = new LinkedMultiValueMap<>();
+        requestEntity.add("access_token", accessToken);
+        requestEntity.add("touser", "okmwo45RUgii_JwxC6h0zAquBTdU");
+        requestEntity.add("msgtype", "text");
+        requestEntity.add("content", "我是测试消息！");
+        String s = restTemplate.postForObject(sendCustomerMessageUrl, requestEntity, String.class);
+
+        System.out.println(s);
+        return s;
+
+    }
 
     //能查到用户  （是否有用户处于登录状态）
     //查不到用户 （注册）
