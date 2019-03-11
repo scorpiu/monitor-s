@@ -42,7 +42,7 @@
 
 	<!--  购物车所有商品-->
 	<select id="getAllCart" resultType="com.ideal.order.dto.OrderCartDto">
-  		select o.offer_id,o.offer_name,o.offer_desc,o.pricing,oaa.default_value,o.offer_type PROD_TYPE,
+  		select o.offer_id,c.serial serial,o.offer_name,o.offer_desc,o.pricing,oaa.default_value,o.offer_type PROD_TYPE,
 		c.start_date STARTDATE,c.end_date ENDDATE,c.count_num COUNTNUM ,oaaa.default_value UNIT from cart c left join offer o
 		on c.OFFER_ID = o.offer_id
 		left join (select oa.offer_id,oa.default_value from offer_attr oa left join dictionary d on oa.attr_id=d.dictionary_id where d.DICTIONARY_ID=1001) oaa
