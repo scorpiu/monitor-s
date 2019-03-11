@@ -33,7 +33,6 @@ public class PropertyController {
 		return propertyService.getPropertiesForPage(phoneNum);
 	}
 
-
 	//预约前查询资源量
 	@RequestMapping("/queryPropertyResource")
 	@ResponseBody

@@ -20,41 +20,43 @@ import com.ideal.sales.service.SalesService;
 @Controller
 @RequestMapping("/sales")
 public class SalesController {
-	
+
 	@Autowired
 	private SalesService salesServiceImpl;
-	
+
 	//获取商品列表
 	@RequestMapping("/queryAllSales")
 	@ResponseBody
 	public List<SalesDto> queryAllSales(){
-		
+
 		return salesServiceImpl.queryAllSales();
 	}
-	
-	
+
+
 	//查看详情
 	@RequestMapping("/querySalesBy")
 	@ResponseBody
 	public SalesByDto querySalesBy(String OFFER_ID){
 		return salesServiceImpl.querySalesBy(OFFER_ID);
 	}
-	
-	
+
+
 	//加入购物车
 	@RequestMapping("/addSalesCart")
 	@ResponseBody
 	public Object addSalesCart(String OFFER_ID , String USER_NAME , String startDate, String endDate){
-		
+
+		System.out.println(endDate+ "--------------------");
 		return salesServiceImpl.addSalesCart(OFFER_ID , USER_NAME , startDate, endDate);
 	}
 	//加入购物车前查询资源量
 	@RequestMapping("/queryResource")
 	@ResponseBody
 	public Object queryResource(String OFFER_ID, String startDate, String endDate){
+		System.out.println(111111);
 		return salesServiceImpl.queryResource(OFFER_ID,startDate,endDate);
 	}
-    
-    
-    
+
+
+
 }

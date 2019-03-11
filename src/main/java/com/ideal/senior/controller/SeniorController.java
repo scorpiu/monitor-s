@@ -34,7 +34,6 @@ public class SeniorController {
         senior.setDuration(duration);
         return seniorService.dealSenior(senior);
 
-
     }
 
     @RequestMapping("/querySenior")
