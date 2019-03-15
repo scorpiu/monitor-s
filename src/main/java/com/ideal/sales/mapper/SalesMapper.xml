@@ -9,7 +9,8 @@
 			WHERE d.DICTIONARY_ID=1001) oa ON
 			o.offer_id=oa.offer_id LEFT JOIN (SELECT oat.* FROM offer_attr oat LEFT JOIN dictionary d ON oat.ATTR_ID = d.DICTIONARY_ID
 			WHERE d.DICTIONARY_ID=1006) oaa ON
-			o.offer_id=oaa.offer_id ;
+			o.offer_id=oaa.offer_id 
+			where o.STATUS_CD='已上架';
 	</select>
 	<!--  查看详情-->
 	<select id="querySalesByID" resultType="com.ideal.sales.dto.SalesProDto">
