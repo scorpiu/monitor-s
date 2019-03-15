@@ -241,7 +241,7 @@
 
 	<delete id="clearOfferCart">
   		delete from cart where
-  		offer_id= #{OFFER_ID} and user_name = #{USER_NAME}
+  		serial= #{cartOfferId} and user_name = #{USER_NAME}
   	</delete>
   	<!-- 添加资源占用 -->
   	<select id="queryProdType" resultType="com.ideal.entity.ProductEntity">

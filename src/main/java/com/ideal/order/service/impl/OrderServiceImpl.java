@@ -126,6 +126,7 @@ public class OrderServiceImpl implements OrderService{
 
 			List<OrderSubmitOfferDto> orderSubmitOfferDtoList = orderSubmitDto.getOrderSubmitOfferDtoList();
 			for (OrderSubmitOfferDto orderSubmitOfferDto : orderSubmitOfferDtoList) {
+				map.put("cartOfferId", orderSubmitOfferDto.getCartOfferId());
 				map.put("OFFER_ID", orderSubmitOfferDto.getOFFER_ID());
 				List<OfferEntity> queryOffer = orderMapper.queryOffer(map);
 				OfferEntity off= new OfferEntity();

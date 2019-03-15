@@ -9,12 +9,19 @@ import java.util.List;
 * 
 */
 public class OrderSubmitOfferDto {
+	private String cartOfferId;
 	private String OFFER_ID;
 	private String EFF_DATE;
 	private String EXP_DATE;
 	private String RESOURCES_NUM;
 	private List<OrderSubmitProDto> proDtoList;
 	private List<OrderSubmitAddedDto> addedDtoList;
+	public String getCartOfferId() {
+		return cartOfferId;
+	}
+	public void setCartOfferId(String cartOfferId) {
+		this.cartOfferId = cartOfferId;
+	}
 	public String getOFFER_ID() {
 		return OFFER_ID;
 	}
@@ -50,6 +57,12 @@ public class OrderSubmitOfferDto {
 	}
 	public void setRESOURCES_NUM(String rESOURCES_NUM) {
 		RESOURCES_NUM = rESOURCES_NUM;
+	}
+	@Override
+	public String toString() {
+		return "OrderSubmitOfferDto [cartOfferId=" + cartOfferId + ", OFFER_ID=" + OFFER_ID + ", EFF_DATE=" + EFF_DATE
+				+ ", EXP_DATE=" + EXP_DATE + ", RESOURCES_NUM=" + RESOURCES_NUM + ", proDtoList=" + proDtoList
+				+ ", addedDtoList=" + addedDtoList + "]";
 	}
 	
 	
