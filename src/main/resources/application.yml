@@ -1,9 +1,11 @@
 server:
-  port: 443
-  ssl:
-    key-store: src/main/resources/www.mihawke.com.jks
-    key-store-password: 2jk97v6869qcp1
-    key-store-type: JKS
+  port: 8086
+  servlet:
+    context-path: /monitor-s
+#  ssl:
+#    key-store: src/main/resources/www.mihawke.com.jks
+#    key-store-password: 2jk97v6869qcp1
+#    key-store-type: JKS
 
 spring:
   mvc:
@@ -22,11 +24,16 @@ spring:
     testWhileIdle: true
     removeAbandoned: true
     logAbandoned: true
-#  thymeleaf:
-#    prefix: classpath:/templates/
-#    suffix: .jsp
-#  thymeleaf:
-#    prefix: classpath:/templates/
+    secondary:
+      max-idle: 10
+      max-wait: 10000
+      min-idle: 5
+      initial-size: 5
+      validation-query: SELECT 1
+      test-on-borrow: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 18800
+
 #配置分页插件pagehelper
 pagehelper:
     helperDialect: mysql

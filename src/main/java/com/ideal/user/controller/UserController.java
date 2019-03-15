@@ -48,6 +48,7 @@ public class UserController {
         Map<String, Long> m = userServiceImpl.queryCartCount(user);
         return m.get("counts").toString();
     }
+
     @RequestMapping("/hello")
     @ResponseBody
     public String sayHello(){

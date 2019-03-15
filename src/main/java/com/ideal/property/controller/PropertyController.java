@@ -30,7 +30,12 @@ public class PropertyController {
 	@RequestMapping("/showPropertys")
 	@ResponseBody
 	public List<Map> getPropertys(@RequestParam("data") String phoneNum){
-		return propertyService.getPropertiesForPage(phoneNum);
+//		return propertyService.getPropertiesForPage(phoneNum);
+		return propertyService.acquireCustomerEstate(phoneNum);
+
+//		return null;
+
+
 	}
 
 	//预约前查询资源量
@@ -63,6 +68,14 @@ public class PropertyController {
 		String SERICL = propertyService.addCustomerService(prodInstId, userName, contactName, time);
 		propertyService.addPropertyResource(prodInstId,userName,String.valueOf(time));
 		return SERICL;
+	}
+	
+	//查询预约人和预约时间
+	@RequestMapping("/queryyuyue")
+	@ResponseBody
+	public Map<String, String> queryYuYue(String prodInstId){
+		Map<String, String> queryYuyue = propertyService.queryYuyue(prodInstId);
+		return queryYuyue;
 	}
 
 

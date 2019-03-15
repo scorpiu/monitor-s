@@ -8,11 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ideal.property.dto.*;
+import com.ideal.property.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.ideal.filter.DifferentDays;
+import com.ideal.property.dto.CustomerServiceDto;
 import com.ideal.property.dto.DictionaryDto;
 import com.ideal.property.dto.OfferInstDto;
 import com.ideal.property.dto.OfferInstRelDto;
@@ -62,20 +65,23 @@ public class PropertyServiceImpl {
 	@Autowired
 	private PropertyMapper propertyMapper;
 
+	@Autowired
+	private CustomerMapper customerMapper;
+
 	public List<Map> getPropertiesForPage(String phoneNum){
 		List<Map> list_data = new ArrayList<Map>();
 
 		List<Map> list_product = new ArrayList<Map>();
 
+		String username = phoneNum;
 
 
-
-		UserInfoDto userInfo = userInfoMapper.getUserInfo(phoneNum);
-		String username = userInfo.getUser_name(); //获取用户
-
-		if(null == userInfo){
-
-		}
+//		UserInfoDto userInfo = userInfoMapper.getUserInfo(phoneNum);
+//		String username = userInfo.getUser_name(); //获取用户
+//
+//		if(null == userInfo){
+//
+//		}
 
 		List<OfferInstDto> offerInsts = offerInstMapper.getOfferInst(username);
 
@@ -186,8 +192,6 @@ public class PropertyServiceImpl {
 					list_data.add(map_sale_jichu);
 
 				}
-
-
 
 
 			}else{
@@ -448,5 +452,156 @@ public class PropertyServiceImpl {
 		propertyMapper.addCustomerService(param);
 		return serial;
 	}
+
+
+	public List acquireCustomerEstate(String userName) {
+
+		List<CustomerOfferInst> customerOfferInstList = customerMapper.acquireCustomerOfferInst(userName);
+		Map<String, Object> resultMap = new HashMap<>();
+
+
+		Map offerresultMap = new HashMap();
+		List offerList = new ArrayList();
+
+		//组装商品返回实例
+		for(CustomerOfferInst customerOfferInst : customerOfferInstList){
+			//商品实例对象
+			Map offerMap = (Map) offerresultMap.get(customerOfferInst.getOfferInstId());
+			CustomerOffer customerOffer = (CustomerOffer) resultMap.get(customerOfferInst.getOfferInstId());
+			if(null == customerOffer){
+				offerMap = new HashMap();
+				customerOffer = new CustomerOffer();
+				customerOffer.setOfferId(customerOfferInst.getOfferId());
+				customerOffer.setOfferInstId(customerOfferInst.getOfferInstId());
+				customerOffer.setOfferName(customerOfferInst.getOfferName());
+				customerOffer.setStartDate(customerOfferInst.getStartDate());
+				customerOffer.setEndDate(customerOfferInst.getEndDate());
+				customerOffer.setUserName(customerOfferInst.getUserName());
+				customerOffer.setOrderSerial(customerOfferInst.getOrderSerial());
+				customerOffer.setChildMap(new HashMap());
+
+				offerMap.put("propertyName", customerOfferInst.getOfferName());
+				offerMap.put("propertyid", customerOfferInst.getOfferInstId());
+				offerMap.put("startDate", customerOfferInst.getStartDate().substring(0,10));
+				offerMap.put("endDate", customerOfferInst.getEndDate().substring(0,10));
+				offerMap.put("product", new ArrayList<>());
+
+
+
+			}
+
+			String childOfferInstId = customerOfferInst.getChildOfferInstId();
+			if(null != childOfferInstId && !"".equals(childOfferInstId)){
+				//含有子商品，添加子商品列表,并查看包含的产品
+				CustomerOffer childCustomerOffer = new CustomerOffer();
+				childCustomerOffer.setOfferId(customerOfferInst.getChildOfferId());
+				childCustomerOffer.setOfferInstId(customerOfferInst.getChildOfferInstId());
+				childCustomerOffer.setOfferName(customerOfferInst.getChildOfferInstName());
+				childCustomerOffer.setStartDate(customerOfferInst.getChildStartDate());
+				childCustomerOffer.setEndDate(customerOfferInst.getChildEndDate());
+				CustomerProd customerProd =packageCustomerProd(customerOfferInst, customerOfferInst.getChildOfferInstId());
+				Map prodMap = new HashMap();
+				prodMap.put(customerProd.getProdInstId(),customerProd);
+				childCustomerOffer.setChildMap(prodMap);
+				customerOffer.getChildMap().put(childOfferInstId, childCustomerOffer);
+
+
+
+				List prodList = (List) offerMap.get("product");
+				prodList.add(customerProd);
+				offerMap.put("product", prodList);
+
+
+			}else {
+				//不含有子商品。查看所包含的产品
+				CustomerProd customerProd =packageCustomerProd(customerOfferInst, customerOfferInst.getChildOfferInstId());
+				if(null !=customerProd){
+
+					customerOffer.getChildMap().put(customerProd.getProdInstId(), customerProd);
+					List prodList = (List) offerMap.get("product");
+					prodList.add(customerProd);
+					offerMap.put("product", prodList);
+				}
+			}
+
+			offerresultMap.put(customerOfferInst.getOfferInstId(), offerMap);
+			resultMap.put(customerOfferInst.getOfferInstId(), customerOffer);
+
+		}
+
+
+		for (Object s : offerresultMap.keySet()){
+			offerList.add(offerresultMap.get(s));
+		}
+
+
+		return offerList;
+	}
+
+	public CustomerProd packageCustomerProd(CustomerOfferInst customerOfferInst, String OfferInstId){
+		//查看包含的产品
+		List<CustomerProdInst> CustomerProdInstList = customerMapper.acquireCustomerProdInst(OfferInstId);
+		System.out.println("OfferInstId : "+OfferInstId);
+		if(CustomerProdInstList.size() == 0){
+			return null;
+		}
+		//包装产品实例
+		CustomerProdInst customerProdInst = CustomerProdInstList.get(0);
+		if(null != customerProdInst){
+			CustomerProd customerProd = new CustomerProd();
+			customerProd.setOrderSerial(customerOfferInst.getOrderSerial());
+			customerProd.setUserName(customerOfferInst.getUserName());
+			customerProd.setProdId(customerProdInst.getProdId());
+			customerProd.setProdInstId(customerProdInst.getProdInstId());
+			customerProd.setProdName(customerProdInst.getProdInstName());
+			customerProd.setProdType(customerProdInst.getProdInstType());
+			customerProd.setStartDate(customerOfferInst.getChildStartDate());
+			customerProd.setEndDate(customerOfferInst.getChildEndDate());
+			customerProd.setProdDesc(customerProdInst.getProdDesc());
+			List<Map> attrList =  customerMapper.acquireCustomerProdInstAttr(customerProdInst.getProdInstId());
+
+			for (Map attrs : attrList){
+				Integer attrId = (Integer) attrs.get("ATTR_ID");
+				if(1001 == attrId){
+					String breviary = (String) attrs.get("ATTR_VAL");
+					customerProd.setThumb(breviary);
+				}
+				if (1003 == attrId){
+					Integer status = (Integer) attrs.get("ATTR_VAL");
+					if(status != null){
+						customerProd.setStatus(status);
+					}else {
+						customerProd.setStatus(0);
+					}
+				}else {
+					customerProd.setStatus(0);
+				}
+
+
+			}
+
+
+			return customerProd;
+		}
+		return null;
+	}
+	
+		public Map<String, String> queryYuyue(String productInstId){
+		Map<String, String> map_yuyue = new HashMap<String, String>();
+		CustomerServiceDto queryYuYue = propertyMapper.queryYuYue(Integer.parseInt(productInstId));
+		if(!StringUtils.isEmpty(queryYuYue)){
+			String contact_yuyue = queryYuYue.getContact_name();
+			String time_yuyue = queryYuYue.getReservation_date()+" "+queryYuYue.getReservation_time();
+			map_yuyue.put("contactUser", contact_yuyue);
+			map_yuyue.put("yuyueTime", time_yuyue);
+		}else{
+			map_yuyue.put("contactUser", "-请选择-");
+			map_yuyue.put("yuyueTime", "-请选择-");
+		}
+		
+		return map_yuyue;
+	}
+
+
 
 }

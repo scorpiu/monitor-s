@@ -39,7 +39,17 @@
 		reservation_time = #{reservationTime},
 		contact_name = #{contactName},
 		prod_inst_id = #{prodInstId},
-		status = #{serial}
+		status = #{status}
 
 	</insert>
+	
+	<select id="queryYuYue" resultType="com.ideal.property.dto.CustomerServiceDto">
+  		select 
+		prod_inst_id,
+		contact_name,
+		reservation_date,
+		reservation_time
+		from customer_service
+		where prod_inst_id = #{productInstId}
+  	</select>
 </mapper>

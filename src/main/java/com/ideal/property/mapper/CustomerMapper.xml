@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ideal.property.mapper.CustomerMapper">
+
+	<resultMap id="customerResultMap" type="com.ideal.property.dto.Customer">
+		<id property="id" column="id" />
+		<result property="userName" column="user_name"/>
+		<result property="cellPhone" column="cell_phone"/>
+		<result property="email" column="email"/>
+		<result property="contactAddress" column="contact_address"/>
+		<result property="registerDate" column="register_date"/>
+		<result property="status" column="status"/>
+		<result property="senior" column="senior"/>
+		<result property="seniorExpiryDate" column="senior_expiry_date"/>
+	</resultMap>
+
+
+	<resultMap id="CustomerOfferInst" type="com.ideal.property.dto.CustomerOfferInst">
+		<id property="id" column="id" />
+		<result property="offerInstId" column="OFFER_INST_ID"/>
+		<result property="offerId" column="offer_id"/>
+		<result property="userName" column="CUST_ID"/>
+		<result property="offerName" column="OFFER_INST_NAME"/>
+		<result property="commType" column="commType"/>
+		<result property="offerType" column="OFFER_TYPE"/>
+		<result property="orderSerial" column="CUST_ORDER_NBR"/>
+		<result property="startDate" column="EFF_DATE"/>
+		<result property="endDate" column="EXP_DATE"/>
+		<result property="childOfferInstId" column="childofferinstid"/>
+		<result property="childOfferId" column="childofferid"/>
+		<result property="childOfferInstName" column="childofferInstName"/>
+		<result property="childCommType" column="childcommType"/>
+		<result property="childOfferType" column="childType"/>
+		<result property="childStartDate" column="childstartdate"/>
+		<result property="childEndDate" column="childenddate"/>
+	</resultMap>
+
+	<resultMap id="CustomerProdInst" type="com.ideal.property.dto.CustomerProdInst">
+		<id property="id" column="id" />
+		<result property="prodId" column="PROD_ID"/>
+		<result property="prodInstId" column="PROD_INST_ID"/>
+		<result property="prodInstName" column="PROD_INST_NAME"/>
+		<result property="prodInstType" column="PROD_TYPE"/>
+		<result property="prodDesc" column="PROD_DESC"/>
+	</resultMap>
+
+	<select id="acquireCustomer" resultMap="customerResultMap">
+		select * from user_info
+	</select>
+
+    <update id="saveUserInfo">
+
+        update user_info
+		<set>
+			<if test="userName !='' and userName !=null">
+				user_name = #{userName},
+			</if>
+			<if test="cellPhone !='' and cellPhone !=null">
+				cell_phone = #{cellPhone},
+			</if>
+			<if test="email !='' and email !=null">
+				email = #{email},
+			</if>
+			<if test="contactAddress !='' and contactAddress !=null">
+				contact_address = #{contactAddress},
+			</if>
+			<if test="registerDate !='' and registerDate !=null">
+				register_date = #{registerDate},
+			</if>
+			<if test="status !='' and status !=null">
+				status = #{status},
+			</if>
+		</set>
+		  where id = #{id}
+    </update>
+
+	<select id="searchCustomer" resultMap="customerResultMap">
+		SELECT * from user_info info left join user_estate estate on info.user_name = estate.user_name
+
+		<where>
+			<if test="userName !='' and userName !=null">
+				and  info.user_name = #{userName}
+			</if>
+			<if test="startDate !='' and startDate !=null and endDate !='' and endDate !=null">
+				and (info.register_date BETWEEN #{startDate} and #{endDate})
+			</if>
+			<if test="status !='' and status !=null">
+				and info.status = #{status}
+			</if>
+			<if test="senior !='' and senior !=null">
+				and estate.senior = #{senior}
+			</if>
+		</where>
+
+	</select>
+
+	<select id="acquireCustomerOfferInst" resultMap="CustomerOfferInst">
+
+		select
+			oi.OFFER_INST_ID,
+			oi.offer_id,
+			oi.CUST_ID,
+			oi.OFFER_INST_NAME,
+			oi.CUST_ORDER_NBR,
+			oi.EFF_DATE,
+			oi.EXP_DATE,
+			offer.COMMODITY_TYPE commType,
+			offer.OFFER_TYPE,
+			rel.OFFER_INST_ID childOFFERinstID,
+			rel.OFFER_ID childOFFERID,
+			co.COMMODITY_TYPE childcommType,
+			co.OFFER_TYPE childType,
+			child.OFFER_INST_NAME childofferInstName,
+			child.CUST_ORDER_NBR ,
+			child.EFF_DATE,
+			child.EXP_DATE
+		from  offer_inst oi
+		left join offer_inst_rel rel on oi.OFFER_INST_ID = rel.PAR_OFFER_INST_ID
+		left join offer co on rel.OFFER_ID = co.offer_id
+		left join offer on oi.offer_id = offer.offer_id
+		left join (select * from offer_inst where OFFER_INST_ID  in (select OFFER_INST_ID from offer_inst_rel))  child on child.OFFER_INST_ID =  rel.OFFER_INST_ID
+		where oi.cust_id = #{userName}
+		and oi.OFFER_INST_ID NOT in (select OFFER_INST_ID from offer_inst_rel)
+
+	</select>
+
+	<select id="acquireCustomerProdInstAttr" resultType="java.util.Map">
+		SELECT * FROM prod_inst_attr WHERE PROD_INST_ID = #{prodInstId}
+	</select>
+
+
+	<select id="acquireCustomerProdInst" resultMap="CustomerProdInst">
+
+		select rel.PROD_ID, rel.PROD_INST_ID, pi.PROD_INST_NAME, product.PROD_TYPE, product.PROD_DESC
+		from offer_prod_inst_rel rel
+		 LEFT JOIN prod_inst pi  on pi.prod_inst_id = rel.PROD_INST_ID
+		 left join product on rel.PROD_ID = product.PROD_ID
+		where OFFER_INST_ID = #{offerInstId}
+
+
+	</select>
+
+	<update id="saveCustomerSenior">
+		update user_estate
+		<set>
+			<if test="senior !='' and senior !=null">
+				senior = #{senior},
+			</if>
+			<if test="seniorExpiryDate !='' and seniorExpiryDate !=null">
+				senior_expiry_date = #{seniorExpiryDate},
+			</if>
+		</set>
+		where user_name = #{userName}
+	</update>
+
+</mapper>
