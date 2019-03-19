@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ideal.filter.StringUtil;
 import com.ideal.property.dto.*;
 import com.ideal.property.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -372,13 +373,15 @@ public class PropertyServiceImpl {
 		List<Map<String , Object>> resourcesMap = new ArrayList<Map<String , Object>>();
 		SimpleDateFormat nowSimple = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat timeSimple = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String nowDate = nowSimple.format(new Date());
 		int days = 7;
 		for (int i = 1; i <= days; i++) {
 			String plusDay = DifferentDays.plusDay(i, nowDate);
-			String startTime = "08:00:00";
-			long time = timeSimple.parse(startTime).getTime();
-			for (int j = 0; j < 5; j++) {
+
+			for (int j = 0; j < 8; j++) {
+				String startTime = "08:00:00";
+				long time = timeSimple.parse(startTime).getTime();
 				Map<String,Object> dateMap = new HashMap<String,Object>();
 				time += (j*7200*1000);
 				String format = timeSimple.format(new Date(time));
@@ -388,7 +391,9 @@ public class PropertyServiceImpl {
 				map.put("START_DATE", plusDay);
 				int sum = propertyMapper.queryPropertyResources(map);
 //				dateMap.put(nowSimple.parse(plusDay).getTime()+timeSimple.parse(format).getTime()+"", 5-sum);
-				dateMap.put("timeStamp",nowSimple.parse(plusDay).getTime()+timeSimple.parse(format).getTime());
+//				System.out.println("========================");
+//				System.out.println(plusDay+"  "+format);
+				dateMap.put("timeStamp",datetime.parse(plusDay+" "+format).getTime());
 				dateMap.put("state",5-sum); 
 
 				resourcesMap.add(dateMap);
@@ -434,8 +439,8 @@ public class PropertyServiceImpl {
 
 		SimpleDateFormat dateSimple = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat timeSimple = new SimpleDateFormat("HH:mm:ss");
-		String reservationDate = dateSimple.format(new Date(time*1000));
-		String reservationTime = timeSimple.format(new Date(time*1000));
+		String reservationDate = dateSimple.format(new Date(time));
+		String reservationTime = timeSimple.format(new Date(time));
 		System.out.println( "-------------serial-------" +  serial);
 		System.out.println( "-------------date-------" +  reservationDate);
 		System.out.println( "-------------starttime-------" +  reservationTime);
@@ -482,10 +487,21 @@ public class PropertyServiceImpl {
 
 				offerMap.put("propertyName", customerOfferInst.getOfferName());
 				offerMap.put("propertyid", customerOfferInst.getOfferInstId());
-				offerMap.put("startDate", customerOfferInst.getStartDate().substring(0,10));
-				offerMap.put("endDate", customerOfferInst.getEndDate().substring(0,10));
-				offerMap.put("product", new ArrayList<>());
 
+				String sDate = customerOfferInst.getStartDate();
+				if(!StringUtil.isNotEmpty(sDate)){
+                    offerMap.put("startDate", sDate.substring(0,10));
+                }else {
+                    offerMap.put("startDate", "");
+                }
+                String eDate = customerOfferInst.getEndDate();
+                if(!StringUtil.isNotEmpty(eDate)){
+                    offerMap.put("endDate", eDate.substring(0,10));
+                }else {
+                    offerMap.put("endDate", "");
+                }
+
+				offerMap.put("product", new ArrayList<>());
 
 
 			}
@@ -499,29 +515,52 @@ public class PropertyServiceImpl {
 				childCustomerOffer.setOfferName(customerOfferInst.getChildOfferInstName());
 				childCustomerOffer.setStartDate(customerOfferInst.getChildStartDate());
 				childCustomerOffer.setEndDate(customerOfferInst.getChildEndDate());
-				CustomerProd customerProd =packageCustomerProd(customerOfferInst, customerOfferInst.getChildOfferInstId());
-				Map prodMap = new HashMap();
-				prodMap.put(customerProd.getProdInstId(),customerProd);
-				childCustomerOffer.setChildMap(prodMap);
-				customerOffer.getChildMap().put(childOfferInstId, childCustomerOffer);
 
+				List<CustomerProd> customerProdList = packageCustomerProd(customerOfferInst, customerOfferInst.getChildOfferInstId());
 
-
+//				CustomerProd customerProd =packageCustomerProd(customerOfferInst, customerOfferInst.getChildOfferInstId());
 				List prodList = (List) offerMap.get("product");
-				prodList.add(customerProd);
+				Map prodMap = new HashMap();
+				for(CustomerProd customerProd : customerProdList){
+					prodMap.put(customerProd.getProdInstId(),customerProd);
+					childCustomerOffer.setChildMap(prodMap);
+					prodList.add(customerProd);
+
+				}
 				offerMap.put("product", prodList);
+
+
+//				if(null != customerProd){
+//                    prodMap.put(customerProd.getProdInstId(),customerProd);
+//                    childCustomerOffer.setChildMap(prodMap);
+//                    List prodList = (List) offerMap.get("product");
+//                    prodList.add(customerProd);
+//                    offerMap.put("product", prodList);
+//                }
+
+                customerOffer.getChildMap().put(childOfferInstId, childCustomerOffer);
+
 
 
 			}else {
 				//不含有子商品。查看所包含的产品
-				CustomerProd customerProd =packageCustomerProd(customerOfferInst, customerOfferInst.getChildOfferInstId());
-				if(null !=customerProd){
-
+				List<CustomerProd> customerProdList = packageCustomerProd(customerOfferInst, customerOfferInst.getOfferInstId());
+//				CustomerProd customerProd =packageCustomerProd(customerOfferInst, customerOfferInst.getOfferInstId());
+				List prodList = (List) offerMap.get("product");
+				for(CustomerProd customerProd : customerProdList){
 					customerOffer.getChildMap().put(customerProd.getProdInstId(), customerProd);
-					List prodList = (List) offerMap.get("product");
+//					List prodList = (List) offerMap.get("product");
 					prodList.add(customerProd);
-					offerMap.put("product", prodList);
+//					offerMap.put("product", prodList);
 				}
+				offerMap.put("product", prodList);
+//				if(null !=customerProd){
+//
+//					customerOffer.getChildMap().put(customerProd.getProdInstId(), customerProd);
+//					List prodList = (List) offerMap.get("product");
+//					prodList.add(customerProd);
+//					offerMap.put("product", prodList);
+//				}
 			}
 
 			offerresultMap.put(customerOfferInst.getOfferInstId(), offerMap);
@@ -538,16 +577,17 @@ public class PropertyServiceImpl {
 		return offerList;
 	}
 
-	public CustomerProd packageCustomerProd(CustomerOfferInst customerOfferInst, String OfferInstId){
+	public List<CustomerProd> packageCustomerProd(CustomerOfferInst customerOfferInst, String OfferInstId){
+		List<CustomerProd> customerProdList = new ArrayList<>();
+
 		//查看包含的产品
 		List<CustomerProdInst> CustomerProdInstList = customerMapper.acquireCustomerProdInst(OfferInstId);
-		System.out.println("OfferInstId : "+OfferInstId);
-		if(CustomerProdInstList.size() == 0){
-			return null;
-		}
-		//包装产品实例
-		CustomerProdInst customerProdInst = CustomerProdInstList.get(0);
-		if(null != customerProdInst){
+//		System.out.println("OfferInstId : "+OfferInstId);
+//		if(CustomerProdInstList.size() == 0){
+//			return null;
+//		}
+
+		for(CustomerProdInst customerProdInst : CustomerProdInstList){
 			CustomerProd customerProd = new CustomerProd();
 			customerProd.setOrderSerial(customerOfferInst.getOrderSerial());
 			customerProd.setUserName(customerOfferInst.getUserName());
@@ -580,10 +620,10 @@ public class PropertyServiceImpl {
 
 			}
 
-
-			return customerProd;
+			customerProdList.add(customerProd);
 		}
-		return null;
+
+		return customerProdList;
 	}
 	
 		public Map<String, String> queryYuyue(String productInstId){
@@ -603,5 +643,11 @@ public class PropertyServiceImpl {
 	}
 
 
+	public static void main(String[] args) {
+		Date d = new Date(1552672800000L);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		System.out.println(sdf.format(d));
+
+	}
 
 }

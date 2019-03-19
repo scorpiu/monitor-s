@@ -2,6 +2,8 @@ package com.ideal.property.controller;
 
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -63,10 +65,20 @@ public class PropertyController {
 	//新增预约信息
 	@RequestMapping("/addCustomerService")
 	@ResponseBody
-	public String addCustomerService(String prodInstId,String userName, String contactName, long time){
+	public String addCustomerService(String prodInstId,String userName, String contactName, String time){
 
-		String SERICL = propertyService.addCustomerService(prodInstId, userName, contactName, time);
-		propertyService.addPropertyResource(prodInstId,userName,String.valueOf(time));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		long l  = 0l;
+		try {
+			Date d = sdf.parse(time);
+			l = d.getTime();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println(time);
+		String SERICL = propertyService.addCustomerService(prodInstId, userName, contactName, l);
+		propertyService.addPropertyResource(prodInstId,userName,String.valueOf(l));
 		return SERICL;
 	}
 	

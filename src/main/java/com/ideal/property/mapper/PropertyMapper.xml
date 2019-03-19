@@ -14,9 +14,9 @@
   	</select>
   	<insert id="addPropertyResource">
   		insert into resources_occupation
-  		set serial = (select CUST_ORDER_NBR from offer_inst where OFFER_INST_ID=#{OFFER_INST_ID}),
-  		offer_id = (select OFFER_ID from offer_inst where OFFER_INST_ID=#{OFFER_INST_ID}),
-  		prod_id = (select prod_id from offer_prod_inst_rel where OFFER_INST_ID=#{OFFER_INST_ID}),
+  		set serial = (select CUST_ORDER_NBR from prod_inst where PROD_INST_ID=#{OFFER_INST_ID}),
+  		offer_id = (select OFFER_ID from offer_prod_inst_rel where PROD_INST_ID=#{OFFER_INST_ID}),
+  		prod_id = (select prod_id from offer_prod_inst_rel where PROD_INST_ID=#{OFFER_INST_ID}),
   		resources_num = 1,
   		start_date = #{DATE},
   		end_date = #{DATE},

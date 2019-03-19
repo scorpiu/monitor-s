@@ -33,6 +33,8 @@
 		cell_phone = #{userName},
 		password =#{passWd},
 		open_id =#{openId},
+		contact_address = #{contact_address},
+		register_date =#{registerDate},
 		status = 0
 
 	</insert>
